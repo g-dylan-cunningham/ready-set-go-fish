@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: rsgf-db-container
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      # - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgres/data
+
+  # backend:
+  #   container_name: rsgf-express-container
+  #   image: backend
+  #   build:
+  #     context: ./express
+  #     dockerfile: express.dockerfile
+  #   ports:
+  #     - 4000:4000
+  #   env_file:
+  #     - ./express/.env.local
+  #   # environment:
+  #   #   - DATABASE_URL=postgresql://postgres:postgres@rsgf-db-container:5432/postgres?schema=public
+  #   depends_on:
+  #     - db #service name
+
+  # nextjs:
+  #   container_name: rsgf-next-container
+  #   build:
+  #     context: ./next
+  #     dockerfile: next.dockerfile
+  #   ports:
+  #     - "3000:3000"
+
+
+
+      # not used:
+    # volumes:
+    #   - .:/next
+    #   - /next/node_modules
+    # environment: 
+    #   - CICHLID_CARTEL_DB_URL=postgresql://postgres:postgres@db:5432/cichlid_cartel_db?schema=public #db is host & name of service
+    # env_file:
+    #   - .env.local
+
+
+volumes:
+  pgdata: {}
+
+
+
+

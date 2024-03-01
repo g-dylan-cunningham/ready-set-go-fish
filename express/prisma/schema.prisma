@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl = env("CICHLID_CARTEL_DB_NON_POOLING_URL")
+}
+
+model Base_Specie {
+  specie_id       String   @id @default(cuid())
+  region          Region   @default(OTHER)
+  subgroup        Subgroup @default(OTHER)
+  category        Category @default(OTHER)
+  common_name     String
+  scientific_name String
+  description     String
+  max_size        Int
+  temperament     String
+  diet            String
+  compatability   String
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  store_specie    Store_Specie[]
+  images          Image[]
+}
+
+model Store_Specie {
+  specie_id       String   @id @default(cuid())
+  base_specie     Base_Specie @relation(fields: [base_specie_id], references: [specie_id])
+  base_specie_id  String
+  region          Region   @default(OTHER)
+  subgroup        Subgroup @default(OTHER)
+  category        Category @default(OTHER)
+  common_name     String
+  scientific_name String
+  description     String
+  max_size        Int
+  temperament     String
+  diet            String
+  compatability   String
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  images          Image[]
+  skus            Sku[]
+}
+
+model Store {
+  store_id       String   @id @default(cuid())
+  store_name   String
+  description  String
+  email        String
+  phone        String
+  is_shipping  Boolean  @default(true)
+  is_pickup  Boolean  @default(true)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+}
+
+
+model Sku {
+  sku_id            String   @id @default(cuid())
+  store_species     Store_Specie  @relation(fields: [store_specie_id], references: [specie_id], onDelete: Cascade)
+  store_specie_id   String
+  size              Size     @default(M)
+  price             String
+  sex               Sex      @default(UNSEXED)
+  quantity          Int      @default(1)
+  is_available      Boolean  @default(false)
+  is_oos            Boolean  @default(false)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+  images            Image[]
+}
+
+
+model Image {
+  image_id            String   @id @default(cuid())
+  base_specie         Base_Specie @relation(fields: [base_specie_id], references: [specie_id], onDelete: Cascade)
+  base_specie_id      String
+  store_specie        Store_Specie @relation(fields: [store_specie_id], references: [specie_id], onDelete: Cascade)
+  store_specie_id     String
+  sku                 Sku @relation(fields: [sku_id], references: [sku_id], onDelete: Cascade)
+  sku_id              String
+  is_primary          Boolean  @default(false)
+  is_secondary        Boolean  @default(false)
+  is_thumbnail        Boolean  @default(false)
+  key                 String
+  url                 String
+  thumbnail_url       String?
+  full_image_url      String?
+  full_image_key      String?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  // species             Species  @relation(fields: [specie_id], references: [specie_id], onDelete: Cascade)
+}
+
+model User {
+  zip        String
+  email      String   @id
+  state      String?
+  street1    String?
+  street2    String?
+  city       String?
+  country    String?
+  is_seller  Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  first_name String
+  last_name  String
+}
+
+enum Category {
+  PEACOCK
+  HAP
+  TANGANYIKA
+  OTHER
+}
+
+enum Size {
+  XXS
+  XS
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
+  VARIETY
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  UNSEXED
+  BREEDINGGROUP
+}
+
+enum Region {
+  MALAWI
+  VICTORIA
+  TANGANYIKA
+  NEW_WORLD
+  OTHER
+}
+
+enum Subgroup {
+  OTHER
+}
