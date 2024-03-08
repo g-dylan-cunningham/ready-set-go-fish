@@ -8,67 +8,67 @@ datasource db {
   // directUrl = env("CICHLID_CARTEL_DB_NON_POOLING_URL")
 }
 
-model Base_Specie {
-  specie_id       String   @id @default(cuid())
+model BaseSpecie {
+  id       String   @id @default(cuid())
   region          Region   @default(OTHER)
   subgroup        Subgroup @default(OTHER)
   category        Category @default(OTHER)
-  common_name     String
-  scientific_name String
+  commonName     String
+  scientificName String
   description     String
-  max_size        Int
+  maxSize        Int
   temperament     String
   diet            String
   compatability   String
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-  store_specie    Store_Specie[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  store_specie    StoreSpecie[]
   images          Image[]
 }
 
-model Store_Specie {
-  specie_id       String   @id @default(cuid())
-  base_specie     Base_Specie @relation(fields: [base_specie_id], references: [specie_id])
-  base_specie_id  String
+model StoreSpecie {
+  id       String   @id @default(cuid())
+  baseSpecie     BaseSpecie? @relation(fields: [baseSpecieId], references: [id])
+  baseSpecieId  String?
   region          Region   @default(OTHER)
   subgroup        Subgroup @default(OTHER)
   category        Category @default(OTHER)
-  common_name     String
-  scientific_name String
+  commonName     String
+  scientificName String
   description     String
-  max_size        Int
+  maxSize        Int
   temperament     String
   diet            String
   compatability   String
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
   images          Image[]
   skus            Sku[]
 }
 
 model Store {
-  store_id       String   @id @default(cuid())
-  store_name   String
+  id       String   @id @default(cuid())
+  storeName   String
   description  String
   email        String
   phone        String
-  is_shipping  Boolean  @default(true)
-  is_pickup  Boolean  @default(true)
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  isShipping  Boolean  @default(true)
+  isPickup  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 
 model Sku {
-  sku_id            String   @id @default(cuid())
-  store_species     Store_Specie  @relation(fields: [store_specie_id], references: [specie_id], onDelete: Cascade)
-  store_specie_id   String
+  id            String   @id @default(cuid())
+  storeSpecies     StoreSpecie  @relation(fields: [storeSpecieId], references: [id], onDelete: Cascade)
+  storeSpecieId   String
   size              Size     @default(M)
   price             String
   sex               Sex      @default(UNSEXED)
   quantity          Int      @default(1)
-  is_available      Boolean  @default(false)
-  is_oos            Boolean  @default(false)
+  isAvailable      Boolean  @default(false)
+  isOos            Boolean  @default(false)
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
   images            Image[]
@@ -76,39 +76,44 @@ model Sku {
 
 
 model Image {
-  image_id            String   @id @default(cuid())
-  base_specie         Base_Specie @relation(fields: [base_specie_id], references: [specie_id], onDelete: Cascade)
-  base_specie_id      String
-  store_specie        Store_Specie @relation(fields: [store_specie_id], references: [specie_id], onDelete: Cascade)
-  store_specie_id     String
-  sku                 Sku @relation(fields: [sku_id], references: [sku_id], onDelete: Cascade)
-  sku_id              String
-  is_primary          Boolean  @default(false)
-  is_secondary        Boolean  @default(false)
-  is_thumbnail        Boolean  @default(false)
+  id            String   @id @default(cuid())
+  baseSpecie         BaseSpecie @relation(fields: [baseSpecieId], references: [id], onDelete: Cascade)
+  baseSpecieId      String
+  storeSpecie        StoreSpecie @relation(fields: [storeSpecieId], references: [id], onDelete: Cascade)
+  storeSpecieId     String
+  sku                 Sku @relation(fields: [skuId], references: [id], onDelete: Cascade)
+  skuId              String
+  isPrimary          Boolean  @default(false)
+  isSecondary        Boolean  @default(false)
+  isThumbnail        Boolean  @default(false)
   key                 String
   url                 String
-  thumbnail_url       String?
-  full_image_url      String?
-  full_image_key      String?
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  thumbnailUrl       String?
+  fullImageUrl      String?
+  fullImageKey      String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
   // species             Species  @relation(fields: [specie_id], references: [specie_id], onDelete: Cascade)
 }
 
 model User {
+  id            String   @id @default(cuid())
   zip        String
-  email      String   @id
-  state      String?
+  displayName String
+  password    String
+  email      String @unique
+  firstName String
+  middleName String?
+  birthday  String?
+  lastName  String?
+   state      String?
   street1    String?
   street2    String?
   city       String?
   country    String?
-  is_seller  Boolean  @default(true)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  first_name String
-  last_name  String
+  isSeller  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Category {

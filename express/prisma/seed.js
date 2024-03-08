@@ -4,42 +4,42 @@ const prisma = new PrismaClient()
 
 async function main() {
   const wetSpot = await prisma.Store.upsert({
-    where: { store_id: 'wet-spot-store-id'},
+    where: { id: 'wet-spot-store-id'},
     update: {},
     create: {
-      store_name: 'The Wet Spot',
+      storeName: 'The Wet Spot',
       description: 'Beautiful fish available',
       email: 'alice@prisma.io',
       phone: '6023500692',
-      is_shipping: false,
-      is_pickup: true,
+      isShipping: false,
+      isPickup: true,
     },
   })
-  const baseTrout = await prisma.Base_Specie.upsert({
-    where: { specie_id: 'malawi-trout-id'},
+  const baseTrout = await prisma.BaseSpecie.upsert({
+    where: { id: 'malawi-trout-id'},
     update: {},
     create: {
-      specie_id: 'malawi-trout-id',
-      common_name: 'Malawi trout',
-      scientific_name: 'Der Malawi trout',
+      id: 'malawi-trout-id',
+      commonName: 'Malawi trout',
+      scientificName: 'Der Malawi trout',
       description: 'Beautiful troue fish',
-      max_size: 233,
+      maxSize: 233,
       temperament: 'temperament',
       diet: 'diet',
       compatability: 'compatability',
     },
   });
 
-  const storeTrout = await prisma.Store_Specie.upsert({
-    where: { specie_id: 'my-malawi-trout-id'},
+  const storeTrout = await prisma.StoreSpecie.upsert({
+    where: { id: 'my-malawi-trout-id'},
     update: {},
     create: {
-      specie_id: 'my-malawi-trout-id',
-      base_specie_id: 'malawi-trout-id',
-      common_name: 'my Malawi trout',
-      scientific_name: 'my Der Malawi trout',
+      id: 'my-malawi-trout-id',
+      baseSpecieId: 'malawi-trout-id',
+      commonName: 'my Malawi trout',
+      scientificName: 'my Der Malawi trout',
       description: 'my Beautiful troue fish',
-      max_size: 233,
+      maxSize: 233,
       temperament: 'my temperament',
       diet: 'my diet',
       compatability: 'my compatability',
@@ -47,22 +47,22 @@ async function main() {
   });
 
   const troutSku1 = await prisma.Sku.upsert({
-    where: { sku_id: 'sku1'},
+    where: { id: 'sku1'},
     update: {},
     create: {
-      sku_id: 'sku1',
-      store_specie_id: 'my-malawi-trout-id',
+      id: 'sku1',
+      storeSpecieId: 'my-malawi-trout-id',
       price: "14",
       sex: "MALE",
       size: "L"
     },
   })
   const troutSku2 = await prisma.Sku.upsert({
-    where: { sku_id: 'sku2' },
+    where: { id: 'sku2' },
     update: {},
     create: {
-      sku_id: 'sku2',
-      store_specie_id: 'my-malawi-trout-id',
+      id: 'sku2',
+      storeSpecieId: 'my-malawi-trout-id',
       price: "11",
       sex: "MALE",
       size: "XS"
@@ -72,6 +72,7 @@ async function main() {
 
   console.log({ wetSpot, baseTrout, storeTrout})//, troutSku })
 }
+
 main()
   .then(async () => {
     await prisma.$disconnect()

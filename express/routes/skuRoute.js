@@ -4,7 +4,7 @@ const router = express.Router();
 const fs = require('fs');
 
 
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
   const { searchString, skip, take, orderBy } = req.query
 
   const skus = await prisma.Sku.findMany({
@@ -24,6 +24,11 @@ router.get('/', async (req, res) => {
   console.log(fs.readFileSync(__dirname + "/../mocks/sku.json", "utf8"));
 
   res.json(skus)
+})
+
+router.delete('/all', async (req, res) => {
+  const result = await prisma.Sku.deleteMany();
+  res.json({ result })
 })
 
 module.exports = router;

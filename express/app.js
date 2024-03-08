@@ -8,7 +8,7 @@ const storeRoute = require("./routes/storeRoute");
 const skuRoute = require("./routes/skuRoute");
 const baseSpecieRoute = require("./routes/baseSpecieRoute");
 const storeSpecieRoute = require("./routes/storeSpecieRoute");
-
+const userRoute = require("./routes/userRoute")
 
 app.use(express.json());
 app.use(cors());
@@ -28,8 +28,8 @@ app.use('/store', storeRoute);
 app.use('/sku', skuRoute);
 app.use('/baseSpecie', baseSpecieRoute);
 app.use('/storeSpecie', storeSpecieRoute);
-
-app.use('/sku', skuRoute);
+app.use('/user', userRoute);
+// app.use('/sku', skuRoute);
 
 // //test api
 // app.get('/test', (req, res) => {

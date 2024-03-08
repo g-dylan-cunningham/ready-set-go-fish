@@ -1,0 +1,13 @@
+.link {
+  font-size: 28px;
+}
+
+.link:hover {
+  color: white;
+  background-color: #2563EB;
+  /* text-blue-600 is same */
+}
+
+.mobileNavMenu > * {
+  margin: 15px 10px;
+}
