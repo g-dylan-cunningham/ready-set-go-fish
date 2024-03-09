@@ -7,7 +7,13 @@ const getMinSkuPrice = (skus) => {
   const priceArr = skus.map(sku => parseFloat(sku.price, 10))
   return "$" + Math.min(...priceArr);
 }
+
+const getServerDomain = () => {
+  return "http://localhost:4000";
+}
+
 export {
   countDecimals,
   getMinSkuPrice,
+  getServerDomain,
 };

@@ -28,8 +28,8 @@ const signupUser = async (req, res) => {
   try {
     const { firstName, lastName, email, displayName, password, zip } = req.body;
 
-    if (!email || !displayName || !password) {
-      throw Error("email, displayName and password are required");
+    if (!email || !password) {
+      throw Error("email and password are required");
     }
   
     if (!validator.isEmail(email)) {
@@ -62,13 +62,10 @@ const signupUser = async (req, res) => {
     // this prevents hackers from 'password matching'
     const salt = await bcrypt.genSalt(10); // default value is 10, more is more secure
     const hash = await bcrypt.hash(password, salt);
-
     const user = await prisma.User.create({
       data: {
-        firstName,
-        lastName,
         email,
-        displayName,
+        displayName: email,
         password: hash,
         zip,
       },
@@ -80,7 +77,8 @@ const signupUser = async (req, res) => {
 
     res.status(201).json(resp);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    console.log({error})
+    res.status(400).json({ message: error.message });
   }
 };
 

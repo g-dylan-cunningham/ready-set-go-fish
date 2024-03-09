@@ -97,23 +97,23 @@ model Image {
 }
 
 model User {
-  id            String   @id @default(cuid())
+  id         String   @id @default(cuid())
   zip        String
   displayName String
-  password    String
+  password   String
   email      String @unique
-  firstName String
+  firstName  String?
   middleName String?
-  birthday  String?
-  lastName  String?
-   state      String?
+  birthday   String?
+  lastName   String?
+  state      String?
   street1    String?
   street2    String?
   city       String?
   country    String?
-  isSeller  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isSeller   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum Category {
