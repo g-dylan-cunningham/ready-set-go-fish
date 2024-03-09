@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import { Field } from '@/app/components/forms';
 import { Main } from '@/app/components';
-import formValidation from '@/app/(profile)/signup/validation';
-import { fields } from '@/app/(profile)/signup/config';
+import formValidation from '@/app/(profile)/login/validation';
+import { fields } from '@/app/(profile)/login/config';
 import { getServerDomain } from '@/app/utils';
 import Skeleton from './wireframe';
 import useAuthContext from '@/app/hooks/useAuthContext';
@@ -23,8 +23,7 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
     setError('')
     const payload = { ...values };
     setIsLoading(true);
-    const url = getServerDomain() + '/user';
-
+    const url = getServerDomain() + '/user/login';
     const res = await fetch(url, {
       method: 'POST',
       headers: {
@@ -56,8 +55,6 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
     initialValues: {
       email: '',
       password: '',
-      zip: '',
-      confirm: '',
     },
     onSubmit: handleSignup,
     validate: formValidation,
@@ -68,7 +65,7 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
     formik.setFieldValue(target.name, target.value);
   };
 
-  const heading = "Let's set up your account.";
+  const heading = "Welcome back. Please sign in.";
   if (isLoading)
     return (
       <Skeleton heading={heading} />
@@ -96,7 +93,7 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
             handleChange={handleChange}
           />
         ))}
-
+ 
         {/* BUTTONS */}
         <div className='mt-5 flex flex-row justify-end'>
           <button type='submit' className='btn btn-primary btn-active'>
@@ -104,8 +101,8 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
           </button>
         </div>
         <div className='mt-5 flex flex-row justify-center'>
-          <Link className='link underline text-blue-600' href="/login">
-            Already have an account?
+          <Link className='link underline text-blue-600' href="/signup">
+            Need to create an account?
           </Link>
         </div>
       </form>

@@ -5,12 +5,14 @@ const router = express.Router();
 const {
   getAll,
   signupUser,
-  deleteAll
+  deleteAll,
+  loginUser
 } = require('../controllers/userController');
 
 
 router.get('/all', getAll);
 router.post('/', signupUser);
+router.post('/login', loginUser);
 router.delete('/all', deleteAll);
 
 module.exports = router;
