@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
 
 const signupUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, displayName, password, zip } = req.body;
+    const { firstName, lastName, email, displayName, password, locationPostal } = req.body;
 
     if (!email || !password) {
       throw Error("email and password are required");
@@ -103,14 +103,14 @@ const signupUser = async (req, res) => {
         email,
         displayName: email,
         password: hash,
-        zip,
+        locationPostal,
       },
     });
     const token = createToken(user.id);
     const resp = {
       email,
       displayName,
-      zip,
+      locationPostal,
       token,
     };
 

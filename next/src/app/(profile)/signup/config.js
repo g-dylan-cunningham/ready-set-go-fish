@@ -24,7 +24,7 @@ export const fields = [
   {
     component: 'Input',
     label: 'Zip/Postal Code',
-    name: 'zip',
+    name: 'locationPostal',
     required: true,
   },
   // {

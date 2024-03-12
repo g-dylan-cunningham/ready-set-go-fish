@@ -1,20 +1,18 @@
 const express = require('express')
-const prisma = require('../db/prisma');
+const requireAuth = require('../middleware/requireAuth');
+const {
+  getAll,
+  createNew,
+  deleteAll,
+  getMyStores
+} = require('../controllers/storeController');
+
 const router = express.Router();
-const fs = require('fs');
+router.use(requireAuth);
 
-router.get('/all', async (req, res) => {
-  const stores = await prisma.Store.findMany({})
-
-  fs.writeFileSync(__dirname + "/../mocks/store.json", JSON.stringify(stores));
-  console.log(fs.readFileSync(__dirname + "/../mocks/store.json", "utf8"));
-
-  res.json(stores);
-})
-
-router.delete('/all', async (req, res) => {
-  const result = await prisma.Store.deleteMany();
-  res.json({ result })
-})
+router.get('/all', getAll)
+router.get('/myStores', getMyStores)
+router.post('/create', createNew)
+router.delete('/all', deleteAll)
 
 module.exports = router;

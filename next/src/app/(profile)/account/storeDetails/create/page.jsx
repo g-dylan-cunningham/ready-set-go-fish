@@ -6,29 +6,32 @@ import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import { Field } from '@/app/components/forms';
 import { Main } from '@/app/components';
-import formValidation from '@/app/(profile)/signup/validation';
-import { fields } from '@/app/(profile)/signup/config';
-import { getServerDomain } from '@/app/utils';
 import Skeleton from './wireframe';
+import formValidation from './validation';
+import { fields } from './config';
+import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
+import Alert from '@/app/components/forms/Alert';
 
-const Signup = ({ params: { specie_id = 1234 } }) => {
-  const { dispatch } = useAuthContext();
+const AddStore = () => {
+  const { dispatch, user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
 
 
-  const handleSignup = async (values) => {
+  const handleCreate = async (values) => {
+    // debugger;
     setError('')
     const payload = { ...values };
     setIsLoading(true);
-    const url = getServerDomain() + '/user';
+    const url = getServerDomain() + '/store/create';
 
-    const res = await fetch(url, {
+    await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`,
       },
       body: JSON.stringify(payload),
     })
@@ -40,8 +43,8 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
           setError(data.message);
           return;
         }
-        localStorage.setItem('user', JSON.stringify(data))
-        dispatch({ type: "LOGIN", payload: data })
+        // localStorage.setItem('user', JSON.stringify(data))
+        // dispatch({ type: "LOGIN", payload: data })
         router.push(`/`);
       })
       .catch((e) => {
@@ -54,21 +57,40 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues: {
+      storeName: '',
+      description: '',
       email: '',
-      password: '',
-      confirm: '',
+      phone: '',
+      isShipping: false, 
+      isPickup : false,
+      isHidePhone: false,
+      isHideAddress: false,
+      isIntl: false,
+      street1: '',
+      street2: '',
+      city: '',
+      state: '',
+      postal: '',
       locationPostal: '',
+      country: '',
+      province: '',
     },
-    onSubmit: handleSignup,
+    onSubmit: handleCreate,
     validate: formValidation,
   });
 
+  console.log(formik.values)
+
   const handleChange = (e) => {
     const { target } = e;
-    formik.setFieldValue(target.name, target.value);
+    if(target.type === 'checkbox') {
+      formik.setFieldValue(target.name, target.checked);
+    } else {
+      formik.setFieldValue(target.name, target.value);
+    }
   };
 
-  const heading = "Let's set up your account.";
+  const heading = "Let's set up your Store.";
   if (isLoading)
     return (
       <Skeleton heading={heading} />
@@ -82,12 +104,7 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
         onSubmit={formik.handleSubmit}
         className='flex flex-col justify-between'
       >
-        { error && (
-          <div role="alert" className="alert alert-error mt-3">
-          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          <span>{error}</span>
-        </div>
-        )}
+        <Alert error={error} />
         {fields.map((item, i) => (
           <Field
             key={i}
@@ -100,33 +117,18 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
         {/* BUTTONS */}
         <div className='mt-5 flex flex-row justify-end'>
           <button type='submit' className='btn btn-primary btn-active'>
-            Save
+            Create
           </button>
         </div>
-        <div className='mt-5 flex flex-row justify-center'>
+        {/* <div className='mt-5 flex flex-row justify-center'>
           <Link className='link underline text-blue-600' href="/login">
             Already have an account?
           </Link>
-        </div>
+        </div> */}
       </form>
     </Main>
   );
 };
 
-export default Signup;
+export default AddStore;
 
-
-// zip        String
-// displayName String
-// password    String
-// email      String @unique
-// firstName String
-// middleName String?
-// birthday  String?
-// lastName  String?
-//  state      String?
-// street1    String?
-// street2    String?
-// city       String?
-// country    String?
-// isSeller  Boolean  @default(true)

@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { useLogout } from "../hooks/useLogout";
 import useAuthContext from "../hooks/useAuthContext";
@@ -6,7 +7,12 @@ import useAuthContext from "../hooks/useAuthContext";
 const Navbar = () => {
   const { logout } = useLogout();
   const { user } = useAuthContext();
-  console.log("user", user);
+  const [isAdminExpanded, setIsAdminExpanded] = useState(false);
+  const toggle = () => {
+    console.log("toggling"),
+      isAdminExpanded,
+      setIsAdminExpanded(!isAdminExpanded);
+  };
 
   return (
     <header className="navbar bg-base-100">
@@ -18,22 +24,43 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            {" "}
-            <Link href="/todo">
-              <h1>Todos</h1>
-            </Link>
+            <div open={isAdminExpanded} onClick={toggle}>
+              Account
+            </div>
+            {isAdminExpanded && (
+              <ul className="p-2">
+                <li>
+                  <Link href="/account/storeDetails/create" onClick={toggle}>
+                    Create Store
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/account/storeDetails" onClick={toggle}>
+                    Store Profile
+                  </Link>
+                </li>
+              </ul>
+            )}
+
+            {/* <Link href="/account">
+              <h1>Account</h1>
+            </Link> */}
           </li>
 
           <li>
             {" "}
             {!user || (user && !user.email) ? (
               <ul className="menu menu-horizontal px-1 pt-0">
-                <li><Link href="/signup">
-                  <h1>Signup</h1>
-                </Link></li>
-                <li><Link href="/login">
-                  <h1>Login</h1>
-                </Link></li>
+                <li>
+                  <Link href="/signup">
+                    <h1>Signup</h1>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/login">
+                    <h1>Login</h1>
+                  </Link>
+                </li>
               </ul>
             ) : (
               <span>{user.email}</span>

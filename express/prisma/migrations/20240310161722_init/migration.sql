@@ -13,6 +13,12 @@ CREATE TYPE "Region" AS ENUM ('MALAWI', 'VICTORIA', 'TANGANYIKA', 'NEW_WORLD', '
 -- CreateEnum
 CREATE TYPE "Subgroup" AS ENUM ('OTHER');
 
+-- CreateEnum
+CREATE TYPE "State" AS ENUM ('AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY');
+
+-- CreateEnum
+CREATE TYPE "Country" AS ENUM ('UnitedStates', 'Canada', 'Mexico', 'UK', 'Ireland', 'Netherlands', 'Germany', 'Belgium', 'France', 'Thailand', 'Vietnam', 'Laos', 'Cambodia', 'Australia', 'NewZealand', 'Austria', 'CzechRepublic', 'China', 'Poland', 'Italy', 'Greece', 'Russia', 'Japan', 'Korea', 'India');
+
 -- CreateTable
 CREATE TABLE "BaseSpecie" (
     "id" TEXT NOT NULL,
@@ -56,11 +62,16 @@ CREATE TABLE "StoreSpecie" (
 CREATE TABLE "Store" (
     "id" TEXT NOT NULL,
     "storeName" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "description1" TEXT,
+    "description2" TEXT,
+    "description3" TEXT,
     "email" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
+    "phone" TEXT,
+    "locationPostal" TEXT NOT NULL,
     "isShipping" BOOLEAN NOT NULL DEFAULT true,
     "isPickup" BOOLEAN NOT NULL DEFAULT true,
+    "isHidePhone" BOOLEAN NOT NULL DEFAULT true,
+    "isHideAddress" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -105,21 +116,61 @@ CREATE TABLE "Image" (
 
 -- CreateTable
 CREATE TABLE "User" (
-    "zip" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
+    "displayName" TEXT,
+    "password" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "state" TEXT,
-    "street1" TEXT,
-    "street2" TEXT,
-    "city" TEXT,
-    "country" TEXT,
+    "locationPostal" TEXT NOT NULL,
+    "firstName" TEXT,
+    "middleName" TEXT,
+    "birthday" TEXT,
+    "lastName" TEXT,
     "isSeller" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "first_name" TEXT NOT NULL,
-    "last_name" TEXT NOT NULL,
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("email")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateTable
+CREATE TABLE "Address" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "storeId" TEXT NOT NULL,
+    "street1" TEXT,
+    "street2" TEXT,
+    "isIntl" BOOLEAN NOT NULL DEFAULT false,
+    "city" TEXT,
+    "state" "State",
+    "postal" TEXT,
+    "country" "Country" NOT NULL DEFAULT 'UnitedStates',
+    "province" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_StoreToUser" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Address_userId_key" ON "Address"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Address_storeId_key" ON "Address"("storeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_StoreToUser_AB_unique" ON "_StoreToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_StoreToUser_B_index" ON "_StoreToUser"("B");
 
 -- AddForeignKey
 ALTER TABLE "StoreSpecie" ADD CONSTRAINT "StoreSpecie_baseSpecieId_fkey" FOREIGN KEY ("baseSpecieId") REFERENCES "BaseSpecie"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -135,3 +186,15 @@ ALTER TABLE "Image" ADD CONSTRAINT "Image_storeSpecieId_fkey" FOREIGN KEY ("stor
 
 -- AddForeignKey
 ALTER TABLE "Image" ADD CONSTRAINT "Image_skuId_fkey" FOREIGN KEY ("skuId") REFERENCES "Sku"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Address" ADD CONSTRAINT "Address_storeId_fkey" FOREIGN KEY ("storeId") REFERENCES "Store"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_StoreToUser" ADD CONSTRAINT "_StoreToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Store"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_StoreToUser" ADD CONSTRAINT "_StoreToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
