@@ -39,13 +39,10 @@ const AddStore = () => {
       .then((data) => {
         setIsLoading(false);
         if(data.message) {
-          console.log(data.message);
           setError(data.message);
           return;
         }
-        // localStorage.setItem('user', JSON.stringify(data))
-        // dispatch({ type: "LOGIN", payload: data })
-        router.push(`/`);
+        router.push(`/account/storeDetails`);
       })
       .catch((e) => {
         setIsLoading(false);

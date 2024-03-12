@@ -1,0 +1,12 @@
+.accountIconContainer {
+  width: 40px; /* Adjust the container size as needed */
+  height: 40px;
+  border-radius: 50%; /* Creates a circular shape */
+  overflow: hidden; /* Ensures the image stays within the circle */
+}
+
+.accountIconImage {
+  width: 100%; /* Ensures the image fills the container */
+  height: 100%;
+  object-fit: cover; /* Prevents image distortion while filling the circle */
+}

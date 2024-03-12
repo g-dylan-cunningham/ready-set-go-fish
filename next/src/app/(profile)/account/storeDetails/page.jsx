@@ -43,6 +43,9 @@ const StoreDetails = () => {
             return;
           }
           setMyStores(data.stores);
+          if (data.stores?.length === 0 ) {
+            setError(noStoresConfigured);
+          }
         })
         .catch((e) => {
           setIsLoading(false);
@@ -122,7 +125,7 @@ const StoreDetails = () => {
       {
         myStores && myStores.length > 0 && (
           myStores.map(store => (
-            <h1>{store.storeName}</h1>
+            <h1 key={store.storeName}>{store.storeName}</h1>
           ))
         )
       }
