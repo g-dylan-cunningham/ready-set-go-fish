@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, redirect } from 'next/navigation';
 import { useFormik } from 'formik';
 import { Field } from '@/app/components/forms';
 import { Main } from '@/app/components';
@@ -12,6 +12,11 @@ import formValidation from './validationxxx';
 import { fields } from './configxxx';
 import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
+import {
+  StoreContact,
+  StoreDescription,
+  StorePreferences
+} from '../forms'
 
 const StoreDetails = () => {
   const { dispatch, user } = useAuthContext();
@@ -20,6 +25,11 @@ const StoreDetails = () => {
   const [error, setError] = useState('');
   const router = useRouter();
   const noStoresConfigured = "You have no stores configured";
+
+  const accessDenied = !user?.token;
+  if (accessDenied) {
+    redirect('/login')
+  }
 
   useEffect(() => {
     const fetchStores = async () => {
@@ -62,42 +72,7 @@ const StoreDetails = () => {
 
   }, [user?.token])
 
-
-  // const formik = useFormik({
-  //   enableReinitialize: true, // need this to take latest values
-  //   initialValues: {
-  //     storeName: '',
-  //     description: '',
-  //     email: '',
-  //     phone: '',
-  //     isShipping: false, 
-  //     isPickup : false,
-  //     isHidePhone: false,
-  //     isHideAddress: false,
-  //     isIntl: false,
-  //     street1: '',
-  //     street2: '',
-  //     city: '',
-  //     state: '',
-  //     postal: '',
-  //     locationPostal: '',
-  //     country: '',
-  //     province: '',
-  //   },
-  //   onSubmit: fetchStores,
-  //   validate: formValidation,
-  // });
-
-  // console.log(formik.values)
-
-  // const handleChange = (e) => {
-  //   const { target } = e;
-  //   if(target.type === 'checkbox') {
-  //     formik.setFieldValue(target.name, target.checked);
-  //   } else {
-  //     formik.setFieldValue(target.name, target.value);
-  //   }
-  // };
+  const callback = () => {}
 
   const heading = "Your Store Details:";
   if (isLoading)
@@ -129,6 +104,11 @@ const StoreDetails = () => {
           ))
         )
       }
+      <StorePreferences handleAction={callback} />
+      <hr />
+      <StoreContact handleAction={callback} />
+      <hr />
+      <StoreDescription handleAction={callback} />
     </Main>
   );
 };

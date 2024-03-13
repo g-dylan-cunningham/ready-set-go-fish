@@ -3,10 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const fs = require("fs");
-
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "3d" }); // expires in 3 days
-};
+const { createToken } = require('./utils/tokens')
 
 const getAll = async (req, res) => {
   const users = await prisma.User.findMany({
@@ -31,7 +28,22 @@ const loginUser = async (req, res) => {
       throw Error("email and password are required");
     }
 
-    const user = await prisma.User.findFirst({ where: {email} });
+    const user = await prisma.User.findFirst({
+      where: {
+        email
+      },
+      select: {
+        id: true,
+        password: true,
+        stores: { // handles store token if store present
+          select: {
+            id: true,
+            storeName: true
+          }
+        }
+      }
+    });
+
     if (!user) {
       throw Error("Incorrect email"); // make same message as bad password
     }
@@ -41,19 +53,13 @@ const loginUser = async (req, res) => {
       throw Error("Incorrect user credentials"); // make more generic?
     }
 
-    const defaultMessage = "Please enter valid user credentials";
-
-    // const exists = await prisma.User.findUnique({
-    //   where: {
-    //     email
-    //   }
-    //   });
-    // if (!exists) {
-    //   throw Error(defaultMessage);
-    // }
-    const token = createToken(user.id);
-    res.json({ token, email });
+    let storeId = user.stores[0]?.id;
+    let storeName = user.stores[0]?.storeName
+    const token = createToken(user.id, storeId);
+    console.log('storeId', user.stores[0], storeId)
+    res.json({ token, email, storeName });
   } catch (error) {
+    console.log('error', error)
     res.status(400).json({
       message: error.message,
     });
@@ -61,6 +67,9 @@ const loginUser = async (req, res) => {
 };
 
 const signupUser = async (req, res) => {
+  if (req.user?.id) {
+    throw Error('You cannot create a user if you are logged in')
+  }
   try {
     const { firstName, lastName, email, displayName, password, locationPostal } = req.body;
 

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const fs = require("fs");
+const { createToken } = require('./utils/tokens')
 
 const getAll = async (req, res) => {
   const stores = await prisma.Store.findMany({})
@@ -44,7 +45,7 @@ const createNew = async (req, res) => {
       },
     });
     if (exists) {
-      throw Error("Email already in use");
+      throw Error("Store name already in use");
     }
 
     console.log('req.user.id', req.user.id)
@@ -60,15 +61,11 @@ const createNew = async (req, res) => {
         locationPostal,
       },
     });
-    // const token = createToken(st.id);
-    // const resp = {
-    //   email,
-    //   displayName,
-    //   locationPostal,
-    //   // token,
-    // };
 
-    res.status(201).json(store);
+    const merchantToken = createToken(req.user.id, store.id); // baseUser & merchant
+    res.status(201).json({ token: merchantToken, email }); // updates to use store token // REVIEW
+
+    // res.status(201).json(store);
   } catch (error) {
     console.log({ error });
     res.status(400).json({ message: error.message });
@@ -76,16 +73,23 @@ const createNew = async (req, res) => {
 };
 
 const getMyStores = async (req, res) => {
-  // join user and stores on userId (many to many)
-  const {stores} = await prisma.User.findFirst({
-    where: {
-      id: req.user.id
-    },
-    select: {
-      stores: true
+  try {
+    if (!req.store || !req.store.id) { // uses middleware to get store id
+      throw Error('no store is configured for this user')
     }
-  })
-  res.json({ stores })
+
+    const stores = await prisma.Store.findFirst({
+      where: {
+        id: req.store.id
+      },
+    })
+
+    console.log('str resp', stores)
+    res.json({stores: [stores]})
+  } catch (e) {
+    console.log("getAllStores error:", e.message);
+    res.status(400).send({ message: e?.message})
+  }
 }
 
 module.exports = {

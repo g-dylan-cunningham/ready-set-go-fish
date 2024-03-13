@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const prisma = require("../db/prisma");
 
-const requireAuth = async (req, res, next) => {
+const storeAuth = async (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(401).json({ message: 'Authorization token required'})
@@ -11,20 +11,14 @@ const requireAuth = async (req, res, next) => {
   const token = authorization.split(" ")[1];
 
   try {
-    const { id, storeId } = jwt.verify(token, process.env.JWT_SECRET);
-  console.log('MIDDLEWARE: userId:', id, 'storeId:', storeId)
+    const { id } = jwt.verify(token, process.env.JWT_SECRET);
+console.log('id', id)
     req.user = await prisma.User.findFirst({
       where: {
         id
       },
-      // select: {
-      //   id: true,
-      //   displayName: true,
-      //   email: true,
-      // }
+  
     })
-
-    req.store = {id: storeId};
 
     next();
   } catch (error) {
@@ -34,4 +28,4 @@ const requireAuth = async (req, res, next) => {
 
 }
 
-module.exports = requireAuth;
+module.exports = storeAuth;

@@ -13,54 +13,22 @@ import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const AddStore = () => {
+const StoreContact = ({ handleAction }) => {
   const { dispatch, user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
 
-
-  const handleCreate = async (values) => {
-    // debugger;
-    setError('')
-    const payload = { ...values };
-    setIsLoading(true);
-    const url = getServerDomain() + '/store/create';
-
-    await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`,
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsLoading(false);
-        if(data.message) {
-          setError(data.message);
-          return;
-        }
-        localStorage.setItem('user', JSON.stringify(data))
-        dispatch({ type: "LOGIN", payload: data })
-        router.push(`/account/storeDetails`);
-      })
-      .catch((e) => {
-        setIsLoading(false);
-        // setError(e)
-        console.log(e);
-      });
-  };
-
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues: {
-      storeName: '',
-      email: '',
-      locationPostal: '',
+      phone: '',
+      isShipping: false, 
+      isPickup : false,
+      isHidePhone: false,
+      isHideAddress: false,
     },
-    onSubmit: handleCreate,
+    onSubmit: handleAction,
     validate: formValidation,
   });
 
@@ -75,7 +43,7 @@ const AddStore = () => {
     }
   };
 
-  const heading = "Let's set up your Store.";
+  const heading = "Store Preferences";
   if (isLoading)
     return (
       <Skeleton heading={heading} />
@@ -115,5 +83,5 @@ const AddStore = () => {
   );
 };
 
-export default AddStore;
+export default StoreContact;
 

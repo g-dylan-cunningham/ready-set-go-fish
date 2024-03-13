@@ -13,54 +13,20 @@ import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const AddStore = () => {
+const AddStore = ({ handleAction }) => {
   const { dispatch, user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
 
-
-  const handleCreate = async (values) => {
-    // debugger;
-    setError('')
-    const payload = { ...values };
-    setIsLoading(true);
-    const url = getServerDomain() + '/store/create';
-
-    await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`,
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsLoading(false);
-        if(data.message) {
-          setError(data.message);
-          return;
-        }
-        localStorage.setItem('user', JSON.stringify(data))
-        dispatch({ type: "LOGIN", payload: data })
-        router.push(`/account/storeDetails`);
-      })
-      .catch((e) => {
-        setIsLoading(false);
-        // setError(e)
-        console.log(e);
-      });
-  };
-
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues: {
-      storeName: '',
-      email: '',
-      locationPostal: '',
+      description1: '',
+      description2: '',
+      description3: '',
     },
-    onSubmit: handleCreate,
+    onSubmit: handleAction,
     validate: formValidation,
   });
 
@@ -75,7 +41,7 @@ const AddStore = () => {
     }
   };
 
-  const heading = "Let's set up your Store.";
+  const heading = "Storefront";
   if (isLoading)
     return (
       <Skeleton heading={heading} />
