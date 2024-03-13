@@ -13,7 +13,7 @@ import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const StoreContact = ({ handleAction }) => {
+const StoreContact = ({ onSubmit }) => {
   const { dispatch, user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -28,7 +28,7 @@ const StoreContact = ({ handleAction }) => {
       isHidePhone: false,
       isHideAddress: false,
     },
-    onSubmit: handleAction,
+    onSubmit: onSubmit,
     validate: formValidation,
   });
 

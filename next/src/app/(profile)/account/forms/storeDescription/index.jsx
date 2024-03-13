@@ -13,7 +13,7 @@ import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const AddStore = ({ handleAction }) => {
+const AddStore = ({ onSubmit }) => {
   const { dispatch, user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -26,7 +26,7 @@ const AddStore = ({ handleAction }) => {
       description2: '',
       description3: '',
     },
-    onSubmit: handleAction,
+    onSubmit: onSubmit,
     validate: formValidation,
   });
 

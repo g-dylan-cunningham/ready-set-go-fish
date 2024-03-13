@@ -13,24 +13,49 @@ import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const StorePreferences = ({ onSubmit }) => {
-  const { dispatch, user } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const router = useRouter();
+const StoreMinimum = ({ onSubmit, error, isLoading, initialValues, disabled }) => {
+  // const { dispatch, user } = useAuthContext();
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState('');
+  // const router = useRouter();
+
+
+  // const handleCreate = async (values) => {
+  //   // debugger;
+  //   setError('')
+  //   const payload = { ...values };
+  //   setIsLoading(true);
+  //   const url = getServerDomain() + '/store/create';
+
+  //   await fetch(url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': `Bearer ${user.token}`,
+  //     },
+  //     body: JSON.stringify(payload),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setIsLoading(false);
+  //       if(data.message) {
+  //         setError(data.message);
+  //         return;
+  //       }
+  //       localStorage.setItem('user', JSON.stringify(data))
+  //       dispatch({ type: "LOGIN", payload: data })
+  //       router.push(`/account/storeDetails`);
+  //     })
+  //     .catch((e) => {
+  //       setIsLoading(false);
+  //       // setError(e)
+  //       console.log(e);
+  //     });
+  // };
 
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
-    initialValues: {
-      isIntl: false,
-      street1: '',
-      street2: '',
-      city: '',
-      state: '',
-      postal: '',
-      country: '',
-      province: '',
-    },
+    initialValues,
     onSubmit: onSubmit,
     validate: formValidation,
   });
@@ -46,16 +71,13 @@ const StorePreferences = ({ onSubmit }) => {
     }
   };
 
-  const heading = "Address details";
+  const heading = "Let's set up your Store.";
   if (isLoading)
     return (
       <Skeleton heading={heading} />
     );
 
   return (
-    <Main>
-      <h1 className='text-2xl font-bold capitalize'>{heading}</h1>
-
       <form
         onSubmit={formik.handleSubmit}
         className='flex flex-col justify-between'
@@ -64,27 +86,19 @@ const StorePreferences = ({ onSubmit }) => {
         {fields.map((item, i) => (
           <Field
             key={i}
-            item={{ ...item }}
+            item={{ ...item, disabled }}
             formik={formik}
             handleChange={handleChange}
           />
         ))}
-
-        {/* BUTTONS */}
         <div className='mt-5 flex flex-row justify-end'>
           <button type='submit' className='btn btn-primary btn-active'>
             Create
           </button>
         </div>
-        {/* <div className='mt-5 flex flex-row justify-center'>
-          <Link className='link underline text-blue-600' href="/login">
-            Already have an account?
-          </Link>
-        </div> */}
       </form>
-    </Main>
   );
 };
 
-export default StorePreferences;
+export default StoreMinimum;
 

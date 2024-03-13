@@ -15,7 +15,8 @@ import useAuthContext from '@/app/hooks/useAuthContext';
 import {
   StoreContact,
   StoreDescription,
-  StorePreferences
+  StorePreferences,
+  StoreMinimum,
 } from '../forms'
 
 const StoreDetails = () => {
@@ -80,6 +81,12 @@ const StoreDetails = () => {
       <Skeleton heading={heading} />
     );
 
+  const initialValues = {
+    storeName: myStores[0]?.storeName,
+    email: myStores[0]?.email,
+    locationPostal: myStores[0]?.locationPostal,
+  }
+
   return (
     <Main>
       <h1 className='text-2xl font-bold capitalize'>{heading}</h1>
@@ -104,11 +111,18 @@ const StoreDetails = () => {
           ))
         )
       }
-      <StorePreferences handleAction={callback} />
+      <StoreMinimum
+        onSubmit={callback}
+        error={error}
+        isLoading={isLoading}
+        initialValues={initialValues}
+        disabled={true}
+      />
+      <StorePreferences onSubmit={callback} />
       <hr />
-      <StoreContact handleAction={callback} />
+      <StoreContact onSubmit={callback} />
       <hr />
-      <StoreDescription handleAction={callback} />
+      <StoreDescription onSubmit={callback} />
     </Main>
   );
 };
