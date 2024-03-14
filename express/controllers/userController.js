@@ -57,7 +57,17 @@ const loginUser = async (req, res) => {
     let storeName = user.stores[0]?.storeName
     const token = createToken(user.id, storeId);
     console.log('storeId', user.stores[0], storeId)
-    res.json({ token, email, storeName });
+    res.json({
+      user: {
+        email, 
+      },
+      token,
+      store: {
+        storeName,
+      },
+    });
+
+
   } catch (error) {
     console.log('error', error)
     res.status(400).json({
@@ -117,10 +127,13 @@ const signupUser = async (req, res) => {
     });
     const token = createToken(user.id);
     const resp = {
-      email,
-      displayName,
-      locationPostal,
+      user: {
+        email,
+        displayName,
+        locationPostal,
+      },
       token,
+      // store has not been created
     };
 
     res.status(201).json(resp);

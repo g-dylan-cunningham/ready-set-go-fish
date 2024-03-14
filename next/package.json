@@ -21,6 +21,7 @@
     "@aws-sdk/s3-presigned-post": "^3.477.0",
     "@heroicons/react": "^2.1.1",
     "@prisma/client": "^5.7.0",
+    "@tanstack/react-query": "^5.28.0",
     "@uidotdev/usehooks": "^2.4.1",
     "formik": "^2.4.5",
     "jsonwebtoken": "^9.0.2",

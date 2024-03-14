@@ -1,9 +1,13 @@
-'use client';
+"use client";
 
-import { AuthContextProvider } from './authContext';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthContextProvider } from "./authContext";
 
 export function Providers({ children }) {
+  const queryClient = new QueryClient() // Instance of QueryClient
   return (
-    <AuthContextProvider>{children}</AuthContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthContextProvider>{children}</AuthContextProvider>
+    </QueryClientProvider>
   );
 }

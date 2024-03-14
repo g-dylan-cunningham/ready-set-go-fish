@@ -1,52 +1,43 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useMutation } from '@tanstack/react-query'
 import { useRouter } from "next/navigation";
 import { Main } from "@/app/components";
-import Skeleton from "./wireframe";
 import { getServerDomain } from "@/app/utils";
+import Skeleton from "./wireframe";
 import useAuthContext from "@/app/hooks/useAuthContext";
 import { StoreMinimum } from "../../forms";
 
 const AddStore = () => {
-  const { dispatch, user } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
 
-  const handleCreate = async (values) => {
-    setError("");
-    const payload = { ...values };
-    setIsLoading(true);
-    const url = getServerDomain() + "/store/create";
-
-    await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsLoading(false);
-        if (data.message) {
-          setError(data.message);
-          return;
-        }
-        localStorage.setItem("user", JSON.stringify(data));
-        dispatch({ type: "LOGIN", payload: data });
-        router.push(`/account/storeDetails`);
-      })
-      .catch((e) => {
-        setIsLoading(false);
-        console.log(e);
+  const {
+    isLoading,
+    error,
+    mutate: handleCreate,
+    data,
+  } = useMutation({
+    mutationFn: async (payload) => {
+      const url = getServerDomain() + "/store/create";
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
       });
-  };
+      return await res.json();
+    },
+  })
 
   const heading = "Let's set up your Store.";
   if (isLoading) return <Skeleton heading={heading} />;
+
+  if (data) return <div>create maybe</div>
+
 
   const initialValues = {
     storeName: '',

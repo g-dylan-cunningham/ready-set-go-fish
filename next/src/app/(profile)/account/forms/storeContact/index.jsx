@@ -2,40 +2,37 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import { Field } from '@/app/components/forms';
 import { Main } from '@/app/components';
 import Skeleton from './wireframe';
 import formValidation from './validation';
 import { fields } from './config';
-import { getServerDomain } from '@/app/utils';
-import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const StorePreferences = ({ onSubmit }) => {
-  const { dispatch, user } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const router = useRouter();
+const StorePreferences = ({
+  onSubmit,
+  error,
+  isLoading,
+  initialValues = {
+    isIntl: false,
+    street1: '',
+    street2: '',
+    city: '',
+    state: '',
+    postal: '',
+    country: '',
+    province: '',
+  },
+  disabled,
+}) => {
 
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
-    initialValues: {
-      isIntl: false,
-      street1: '',
-      street2: '',
-      city: '',
-      state: '',
-      postal: '',
-      country: '',
-      province: '',
-    },
+    initialValues,
     onSubmit: onSubmit,
     validate: formValidation,
   });
-
-  console.log(formik.values)
 
   const handleChange = (e) => {
     const { target } = e;

@@ -13,24 +13,24 @@ import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const AddStore = ({ onSubmit }) => {
-  const { dispatch, user } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const router = useRouter();
+const AddStore = ({ 
+  onSubmit,
+  error,
+  isLoading,
+  initialValues = {
+    description1: '',
+    description2: '',
+    description3: '',
+  },
+  disabled,
+}) => {
 
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
-    initialValues: {
-      description1: '',
-      description2: '',
-      description3: '',
-    },
+    initialValues,
     onSubmit: onSubmit,
     validate: formValidation,
   });
-
-  console.log(formik.values)
 
   const handleChange = (e) => {
     const { target } = e;

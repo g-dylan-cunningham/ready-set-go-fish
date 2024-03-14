@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter, redirect } from 'next/navigation';
-import { useFormik } from 'formik';
-import { Field } from '@/app/components/forms';
-import { Main } from '@/app/components';
-import Skeleton from './wireframe';
 import Alert from '@/app/components/forms/Alert';
-import formValidation from './validationxxx';
-import { fields } from './configxxx';
-import { getServerDomain } from '@/app/utils';
+import Skeleton from './wireframe';
+import { Main } from '@/app/components';
+// import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
+import {
+  getMyStores,
+} from './api'
 import {
   StoreContact,
   StoreDescription,
@@ -20,66 +20,46 @@ import {
 } from '../forms'
 
 const StoreDetails = () => {
-  const { dispatch, user } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
-  const [myStores, setMyStores] = useState([]);
-  const [error, setError] = useState('');
-  const router = useRouter();
+  const { dispatch, user, token, store } = useAuthContext();
+  const [isDisabled, setIsDisabled] = useState({
+    minimum: true,
+    contact: true,
+    description: true,
+    preferences: true,
+  })
+  // const router = useRouter();
   const noStoresConfigured = "You have no stores configured";
 
-  const accessDenied = !user?.token;
-  if (accessDenied) {
-    redirect('/login')
-  }
+  const setDisabled = useCallback((store, bool) => {
+    const state = { ...isDisabled };
+    state[store] = bool;
+    setIsDisabled(state);
+  }, [isDisabled])
 
-  useEffect(() => {
-    const fetchStores = async () => {
-      setError('')
-      setIsLoading(true);
-      const url = getServerDomain() + '/store/myStores';
+
+  // const accessDenied = !token;
+  // if (accessDenied) {
+  //   redirect('/login')
+  // }
   
-      await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setIsLoading(false);
-          if(data.message) {
-            console.log(data.message);
-            setError(data.message);
-            return;
-          }
-          setMyStores(data.stores);
-          if (data.stores?.length === 0 ) {
-            setError(noStoresConfigured);
-          }
-        })
-        .catch((e) => {
-          setIsLoading(false);
-          // setError(e)
-          console.log(e);
-        });
-    };
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['myStores', token],
+    queryFn: getMyStores,
+    enabled: !!token
+  })
 
-    if (user?.token) {
-      fetchStores()
-    } else {
-      setError(noStoresConfigured);
-    }
+  const myStores = data?.stores || [];
 
-  }, [user?.token])
+  if (isLoading) {
+    return <div>comp loading</div>
+  }
+  if (error) return 'An error has occurred: ' + error.message;
 
-  const callback = () => {}
+  console.log('mystores', myStores)
 
-  const heading = "Your Store Details:";
-  if (isLoading)
-    return (
-      <Skeleton heading={heading} />
-    );
+  const callback = () => {
+
+  }
 
   const initialValues = {
     storeName: myStores[0]?.storeName,
@@ -87,13 +67,14 @@ const StoreDetails = () => {
     locationPostal: myStores[0]?.locationPostal,
   }
 
+  const heading = "Your Store Details:";
   return (
     <Main>
       <h1 className='text-2xl font-bold capitalize'>{heading}</h1>
       <Alert error={error} />
 
       {
-        error === noStoresConfigured && (
+        error === noStoresConfigured && ( // TODO fix this
           <div>
             <div className='mt-5 flex flex-row justify-center'>
               <Link className='link underline text-blue-600' href="/account/storeDetails/create">
@@ -116,7 +97,8 @@ const StoreDetails = () => {
         error={error}
         isLoading={isLoading}
         initialValues={initialValues}
-        disabled={true}
+        disabled={isDisabled.minimum}
+        setDisabled={(bool) => setDisabled('minimum', bool)}
       />
       <StorePreferences onSubmit={callback} />
       <hr />

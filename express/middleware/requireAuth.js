@@ -12,23 +12,18 @@ const requireAuth = async (req, res, next) => {
 
   try {
     const { id, storeId } = jwt.verify(token, process.env.JWT_SECRET);
-  console.log('MIDDLEWARE: userId:', id, 'storeId:', storeId)
+    console.log('MIDDLEWARE: userId:', id, 'storeId:', storeId)
     req.user = await prisma.User.findFirst({
       where: {
         id
       },
-      // select: {
-      //   id: true,
-      //   displayName: true,
-      //   email: true,
-      // }
     })
 
     req.store = {id: storeId};
 
     next();
   } catch (error) {
-    console.log(error);
+    console.log('requireAuthCatch', error);
     res.status(401).json({ message: 'Request is not authorized'});
   }
 
