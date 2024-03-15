@@ -125,7 +125,7 @@ const signupUser = async (req, res) => {
         locationPostal,
       },
     });
-    const token = createToken(user.id);
+    const token = createToken(user.id, null);
     const resp = {
       user: {
         email,

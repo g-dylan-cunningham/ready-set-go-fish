@@ -32,7 +32,7 @@ const Navbar = () => {
 
           {/* center aligned */}
           <li>
-            <ul>
+            <ul className="menu menu-horizontal px-1 pt-0">
               <li>
                 {!user || (user && !user.email) ? (
                   <ul className="menu menu-horizontal px-1 pt-0">
@@ -55,11 +55,11 @@ const Navbar = () => {
               <li>
                 {" "}
                 {user?.email && (
-                  <div>
+                  <span>
                     <button type="button" onClick={logout}>
                       LOGOUT
                     </button>
-                  </div>
+                  </span>
                 )}
               </li>
             </ul>

@@ -16,8 +16,8 @@ import {
   StoreContact,
   StoreDescription,
   StorePreferences,
-  StoreMinimum,
 } from '../forms'
+import MinimumStoreActions from './minimumStoreActions';
 
 const StoreDetails = () => {
   const { dispatch, user, token, store } = useAuthContext();
@@ -41,7 +41,7 @@ const StoreDetails = () => {
   // if (accessDenied) {
   //   redirect('/login')
   // }
-  
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['myStores', token],
     queryFn: getMyStores,
@@ -57,16 +57,7 @@ const StoreDetails = () => {
 
   console.log('mystores', myStores)
 
-  const callback = () => {
-
-  }
-
-  const initialValues = {
-    storeName: myStores[0]?.storeName,
-    email: myStores[0]?.email,
-    locationPostal: myStores[0]?.locationPostal,
-  }
-
+  const callback = () => {}
   const heading = "Your Store Details:";
   return (
     <Main>
@@ -92,11 +83,8 @@ const StoreDetails = () => {
           ))
         )
       }
-      <StoreMinimum
-        onSubmit={callback}
-        error={error}
-        isLoading={isLoading}
-        initialValues={initialValues}
+      <MinimumStoreActions
+        myStores={myStores}
         disabled={isDisabled.minimum}
         setDisabled={(bool) => setDisabled('minimum', bool)}
       />

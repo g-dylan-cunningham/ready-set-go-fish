@@ -9,14 +9,14 @@ import formValidation from "./validation";
 import { fields } from "./config";
 import Alert from "@/app/components/forms/Alert";
 
-const StoreMinimum = ({
+const StoreMinimumForm = ({
   onSubmit,
   error,
   isLoading,
   initialValues,
   disabled,
   setDisabled,
-}) => {
+}) => {  
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues,
@@ -67,4 +67,4 @@ const StoreMinimum = ({
   );
 };
 
-export default StoreMinimum;
+export default StoreMinimumForm;

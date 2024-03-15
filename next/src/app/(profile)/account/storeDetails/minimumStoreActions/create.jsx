@@ -5,9 +5,8 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from "next/navigation";
 import { Main } from "@/app/components";
 import { getServerDomain } from "@/app/utils";
-import Skeleton from "./wireframe";
 import useAuthContext from "@/app/hooks/useAuthContext";
-import { StoreMinimum } from "../../forms";
+import StoreMinimumForm from "./form";
 
 const AddStore = () => {
   const { dispatch, user, token } = useAuthContext();
@@ -19,7 +18,7 @@ const AddStore = () => {
     mutate: handleCreate,
     data,
   } = useMutation({
-    mutationFn: async (payload) => {
+    mutationFn: async (body) => {
       const url = getServerDomain() + "/store/create";
       const res = await fetch(url, {
         method: "POST",
@@ -27,14 +26,18 @@ const AddStore = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(body),
       });
-      return await res.json();
+      const payload = await res.json();
+      localStorage.setItem("user", JSON.stringify(payload));
+      dispatch({ type: "LOGIN", payload });
+      router.push(`/account/storeDetails`);
+      return payload;
     },
   })
 
   const heading = "Let's set up your Store.";
-  if (isLoading) return <Skeleton heading={heading} />;
+  // if (isLoading) return <Skeleton heading={heading} />;
 
   if (data) return <div>create maybe</div>
 
@@ -48,7 +51,7 @@ const AddStore = () => {
   return (
     <Main>
       <h1 className="text-2xl font-bold capitalize">{heading}</h1>
-      <StoreMinimum
+      <StoreMinimumForm
         onSubmit={handleCreate}
         error={error}
         isLoading={isLoading}
