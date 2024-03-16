@@ -76,13 +76,6 @@ const StoreDetails = () => {
         )
       }
       
-      {
-        myStores && myStores.length > 0 && (
-          myStores.map(store => (
-            <h1 key={store.storeName}>{store.storeName}</h1>
-          ))
-        )
-      }
       <MinimumStoreActions
         myStores={myStores}
         disabled={isDisabled.minimum}

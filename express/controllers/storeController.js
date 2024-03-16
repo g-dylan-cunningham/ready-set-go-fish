@@ -37,7 +37,6 @@ const createNew = async (req, res) => {
       throw Error("Email is not valid");
     }
 
-
     // is storeName unique?
     const exists = await prisma.Store.findUnique({
       where: {
@@ -47,8 +46,7 @@ const createNew = async (req, res) => {
     if (exists) {
       throw Error("Store name already in use");
     }
-
-    console.log('req.user.id', req.user.id)
+    // console.log('req.user.id', req.user.id)
   
     const store = await prisma.Store.create({
       data: {
@@ -92,9 +90,30 @@ const getMyStores = async (req, res) => {
   }
 }
 
+const updateStore = async (req, res) => {
+  try {
+    if (!req.store || !req.store.id) { // uses middleware to get store id
+      throw Error('no store is configured for this user')
+    }
+    console.log('req.body', req.body)
+    const store = await prisma.Store.update({
+      where: {
+        id: req.store.id
+      },
+      data: {
+        ...req.body
+      }
+    })
+    res.status(200).json(store)
+  } catch (e) {
+    console.log('error in put', e)
+  }
+}
+
 module.exports = {
   getAll,
   createNew,
   deleteAll,
   getMyStores,
+  updateStore,
 };

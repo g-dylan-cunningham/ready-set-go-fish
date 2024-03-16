@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from "next/navigation";
-import { Main } from "@/app/components";
 import { getServerDomain } from "@/app/utils";
 import useAuthContext from "@/app/hooks/useAuthContext";
 import StoreMinimumForm from "./form";
+import Alert from "@/app/components/forms/Alert";
 
-const AddStore = () => {
+const Create = () => {
   const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
 
@@ -49,16 +49,17 @@ const AddStore = () => {
   }
 
   return (
-    <Main>
-      <h1 className="text-2xl font-bold capitalize">{heading}</h1>
+    <div>
+      creATE
+      <Alert error={error} />
       <StoreMinimumForm
         onSubmit={handleCreate}
         error={error}
         isLoading={isLoading}
         initialValues={initialValues}
       />
-    </Main>
+    </div>
   );
 };
 
-export default AddStore;
+export default Create;
