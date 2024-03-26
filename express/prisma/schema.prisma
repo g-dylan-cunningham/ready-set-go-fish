@@ -123,10 +123,10 @@ model User {
 
 model Address {
   id          String   @id @default(cuid())
-  user        User @relation(fields: [userId], references: [id])
-  userId      String @unique
-  store       Store @relation(fields: [storeId], references: [id])
-  storeId     String @unique
+  user        User? @relation(fields: [userId], references: [id])
+  userId      String? @unique
+  store       Store? @relation(fields: [storeId], references: [id])
+  storeId     String? @unique
   street1     String?
   street2     String?
   isIntl      Boolean @default(false)
@@ -256,4 +256,5 @@ enum Country {
   Japan
   Korea
   India
+  Other
 }

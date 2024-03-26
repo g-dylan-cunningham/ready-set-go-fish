@@ -1,4 +1,4 @@
-import StoreContact from "./storeContact";
+import StoreContact from "../storeDetails/contact/form";
 import StoreDescription from './storeDescription'
 import StorePreferences from "./storePreferences";
 

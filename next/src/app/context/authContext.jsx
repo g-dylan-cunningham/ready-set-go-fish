@@ -32,7 +32,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     dispatch({ type: 'LOGIN', payload: JSON.parse(localStorage.getItem('details'))});
   }, [])
-  console.log('AuthContext state: ', state);
+  // console.log('AuthContext state: ', state);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>

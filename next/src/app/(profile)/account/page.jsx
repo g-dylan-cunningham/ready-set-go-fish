@@ -1,8 +1,9 @@
 import React from 'react'
+// import { StepContextProvider } from './storeDetails/contexts/stepContext';
 
 const Account = () => {
   return (
-    <div>Account</div>
+    <div>account page</div>
   )
 }
 

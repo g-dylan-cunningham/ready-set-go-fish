@@ -5,23 +5,24 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from "next/navigation";
 import { getServerDomain } from "@/app/utils";
 import useAuthContext from "@/app/hooks/useAuthContext";
-import StoreMinimumForm from "./form";
+import ContactForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const Create = () => {
+const Create = ({ traverse }) => {
   const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
-
+console.log('create')
   const {
     isLoading,
     error,
-    mutate: handleCreate,
+    mutate: handlePut,
     data,
   } = useMutation({
     mutationFn: async (body) => {
-      const url = getServerDomain() + "/store/create";
+      // debugger
+      const url = getServerDomain() + "/store";
       const res = await fetch(url, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -29,18 +30,16 @@ const Create = () => {
         body: JSON.stringify(body),
       });
       const payload = await res.json();
-      localStorage.setItem("user", JSON.stringify(payload));
-      dispatch({ type: "LOGIN", payload });
-      router.push(`/account/storeDetails`);
+      traverse(1);
+      // localStorage.setItem("user", JSON.stringify(payload));
+      // dispatch({ type: "LOGIN", payload });
+      // router.push(`/account/storeDetails`);
+      // TODO dispatch to next tab?
       return payload;
     },
   })
 
-  const heading = "Let's set up your Store.";
-  // if (isLoading) return <Skeleton heading={heading} />;
-
   if (data) return <div>create maybe</div>
-
 
   const initialValues = {
     storeName: '',
@@ -50,14 +49,14 @@ const Create = () => {
 
   return (
     <div>
-      creATE
       <Alert error={error} />
-      <StoreMinimumForm
-        onSubmit={handleCreate}
+      <ContactForm
+        onSubmit={handlePut}
         error={error}
         isLoading={isLoading}
         initialValues={initialValues}
       />
+      createee
     </div>
   );
 };

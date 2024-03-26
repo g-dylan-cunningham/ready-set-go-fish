@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import StoreMinimumForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const MinimumStoreActions = ({ myStores, disabled, setDisabled }) => {
+const BasicForm = ({ myStores, disabled, setDisabled, traverse }) => {
   const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
 
@@ -31,7 +31,8 @@ const MinimumStoreActions = ({ myStores, disabled, setDisabled }) => {
           body: JSON.stringify(body),
         });
         // router.push(`/`);
-        setDisabled(true)
+        // setDisabled(true)
+        traverse(1);
         return await res.json();
       } catch (e) {
         console.log(e)
@@ -43,16 +44,16 @@ const MinimumStoreActions = ({ myStores, disabled, setDisabled }) => {
 
   return (
     <div>
-      upDATE
+      UPDATE FORM
       <Alert error={error} />
       <StoreMinimumForm
         onSubmit={handleEdit}
         error={error}
         isLoading={!myStores}
         initialValues={initialValues}
-        disabled={disabled}
+        // disabled={disabled}
       />
-      {disabled && ( // enables form for updating
+      {/* {disabled && ( // enables form for updating
         <div className="mt-5 flex flex-row justify-end">
           <button
             type="button"
@@ -62,9 +63,9 @@ const MinimumStoreActions = ({ myStores, disabled, setDisabled }) => {
             Edit
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
 
-export default MinimumStoreActions;
+export default BasicForm;

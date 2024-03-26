@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import React, { useEffect, useState, useCallback } from "react";
+import { isPromise, useFormik } from "formik";
 import { Field } from "@/app/components/forms";
 import formValidation from "./validation";
 import { fields } from "./config";
+import useStepContext from "../../contexts/useStepContext";
 
-const StoreMinimumForm = ({
+const BasicForm = ({
   onSubmit,
   initialValues,
   disabled,
 }) => {
+  const { dispatch } = useStepContext();
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues,
@@ -18,7 +20,15 @@ const StoreMinimumForm = ({
     validate: () => formValidation,
   });
 
+  useEffect(() => setIsPristine(true), [])
+  const [isPristine, setIsPristine] = useState(true)
+
+
   const handleChange = (e) => {
+    if (isPristine) {
+      setIsPristine(false);
+      dispatch({ type: "SET_DIRTY", payload: { id: 'basic' }})
+    }
     const { target } = e;
     if (target.type === "checkbox") {
       formik.setFieldValue(target.name, target.checked);
@@ -51,4 +61,4 @@ const StoreMinimumForm = ({
   );
 };
 
-export default StoreMinimumForm;
+export default BasicForm;

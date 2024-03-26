@@ -10,7 +10,7 @@ import formValidation from './validation';
 import { fields } from './config';
 import Alert from '@/app/components/forms/Alert';
 
-const StorePreferences = ({
+const ContactForm = ({
   onSubmit,
   error,
   isLoading,
@@ -83,5 +83,4 @@ const StorePreferences = ({
   );
 };
 
-export default StorePreferences;
-
+export default ContactForm;

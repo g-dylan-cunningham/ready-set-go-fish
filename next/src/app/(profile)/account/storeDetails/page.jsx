@@ -1,40 +1,67 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
-import { useRouter, redirect } from 'next/navigation';
-import Alert from '@/app/components/forms/Alert';
-import Skeleton from './wireframe';
-import { Main } from '@/app/components';
-// import { getServerDomain } from '@/app/utils';
-import useAuthContext from '@/app/hooks/useAuthContext';
-import {
-  getMyStores,
-} from './api'
-import {
-  StoreContact,
-  StoreDescription,
-  StorePreferences,
-} from '../forms'
-import MinimumStoreActions from './minimumStoreActions';
+import React, { useEffect, useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRouter, redirect } from "next/navigation";
+import Alert from "@/app/components/forms/Alert";
+import { Main } from "@/app/components";
+import useAuthContext from "@/app/hooks/useAuthContext";
+import { getMyStores } from "./api";
+import { StoreDescription, StorePreferences } from "../forms";
+import BasicForm from "./basic";
+import ContactForm from "./contact";
+import { StepContextProvider } from "./contexts/stepContext";
+import useStepContext from "./contexts/useStepContext";
+
+const StoreDetailsContext = () => {
+  return (
+    <StepContextProvider>
+      <StoreDetails />
+    </StepContextProvider>
+  );
+};
 
 const StoreDetails = () => {
   const { dispatch, user, token, store } = useAuthContext();
-  const [isDisabled, setIsDisabled] = useState({
-    minimum: true,
-    contact: true,
-    description: true,
-    preferences: true,
-  })
+  const { dispatch: stepDispatch, steps, currentIdx } = useStepContext();
+  // console.log('steps',steps)
+
+  // const [isDisabled, setIsDisabled] = useState({
+  //   // REVIEW do we want to auto disable at all?
+  //   minimum: false,
+  //   contact: false,
+  //   description: false,
+  //   preferences: false,
+  // });
   // const router = useRouter();
   const noStoresConfigured = "You have no stores configured";
 
-  const setDisabled = useCallback((store, bool) => {
-    const state = { ...isDisabled };
-    state[store] = bool;
-    setIsDisabled(state);
-  }, [isDisabled])
+  // const setDisabled = useCallback(
+  //   (store, bool) => {
+  //     const state = { ...isDisabled };
+  //     state[store] = bool;
+  //     setIsDisabled(state);
+  //   },
+  //   [isDisabled]
+  // );
+
+  const updateCurrentStep = (delta) => {
+    stepDispatch({ type: "SET_STEP", payload: { value: delta }})
+  }
+
+  const traverse = useCallback(
+    (stepValue) => {
+      if (stepValue > 0 && currentIdx < steps.length) {
+        updateCurrentStep(1);
+      }
+      if (stepValue < 0 && currentIdx > 0) {
+        updateCurrentStep(-1);
+      }
+    },
+    [currentIdx]
+  );
+
 
 
   // const accessDenied = !token;
@@ -43,52 +70,102 @@ const StoreDetails = () => {
   // }
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['myStores', token],
+    queryKey: ["myStores", token],
     queryFn: getMyStores,
-    enabled: !!token
-  })
+    enabled: !!token,
+  });
 
   const myStores = data?.stores || [];
 
   if (isLoading) {
-    return <div>comp loading</div>
+    return <div>comp loading</div>;
   }
-  if (error) return 'An error has occurred: ' + error.message;
+  if (error) return "An error has occurred: " + error.message;
 
-  console.log('mystores', myStores)
+  // console.log("mystores", myStores);
 
-  const callback = () => {}
+  /**
+   * STEPS:
+   * Basic info
+   * Address
+   * Description
+   * Preferences
+   *
+   * PROPERTIES:
+   * is section pristine (allows skipping without warning)
+   * is section dirty && unsaved (shows warning modal)
+   * current section
+   *
+   */
+
+  const callback = () => {};
   const heading = "Your Store Details:";
   return (
     <Main>
-      <h1 className='text-2xl font-bold capitalize'>{heading}</h1>
+      <h1 className="text-2xl font-bold capitalize">{heading}</h1>
       <Alert error={error} />
 
-      {
-        error === noStoresConfigured && ( // TODO fix this
-          <div>
-            <div className='mt-5 flex flex-row justify-center'>
-              <Link className='link underline text-blue-600' href="/account/storeDetails/create">
-                Create my store
-              </Link>
-            </div>
+      {(myStores.length === 0 || error === noStoresConfigured) && ( // TODO fix this
+        <div>
+          <div className="mt-5 flex flex-row justify-center">
+            <Link
+              className="link underline text-blue-600"
+              href="/account/storeDetails/create"
+            >
+              Create my store
+            </Link>
           </div>
-        )
-      }
-      
-      <MinimumStoreActions
-        myStores={myStores}
-        disabled={isDisabled.minimum}
-        setDisabled={(bool) => setDisabled('minimum', bool)}
-      />
-      <StorePreferences onSubmit={callback} />
+        </div>
+      )}
+
+      <ul className="steps">
+        {steps.map((step, i) => (
+          <li
+            className={`step ${i <= currentIdx && "step-primary"}`}
+            data-content={(i < currentIdx && "✓") || i + 1}
+            key={step.title}
+          >
+            {step.title}
+          </li>
+        ))}
+      </ul>
+
+      {currentIdx === 0 && (
+        <BasicForm
+          myStores={myStores}
+          traverse={traverse}
+          // disabled={isDisabled.minimum}
+          // setDisabled={(bool) => setDisabled("minimum", bool)}
+        />
+      )}
+      {currentIdx === 1 && <ContactForm traverse={traverse} />}
       <hr />
-      <StoreContact onSubmit={callback} />
+      {currentIdx === 2 && <StorePreferences onSubmit={callback} />}
       <hr />
-      <StoreDescription onSubmit={callback} />
+      {currentIdx === 3 && <StoreDescription onSubmit={callback} />}
+
+      <div className="mt-5 w-2/5">
+        {currentIdx > 0 && (
+          <button
+            type="button"
+            onClick={() => traverse(-1)}
+            className="btn btn-ghost float-left"
+          >
+            Previous
+          </button>
+        )}
+        {/* {currentIdx < steps.length - 1 && (
+          <button
+            type="button"
+            onClick={() => traverse(1)}
+            className="btn btn-ghost float-right"
+          >
+            Next
+          </button>
+        )} */}
+      </div>
     </Main>
   );
 };
 
-export default StoreDetails;
-
+export default StoreDetailsContext;
