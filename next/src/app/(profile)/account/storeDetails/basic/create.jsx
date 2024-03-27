@@ -8,7 +8,7 @@ import useAuthContext from "@/app/hooks/useAuthContext";
 import BasicForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const Create = ({ traverse }) => {
+const CreateBasic = ({ traverse }) => {
   const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
 
@@ -19,21 +19,36 @@ const Create = ({ traverse }) => {
     data,
   } = useMutation({
     mutationFn: async (body) => {
-      const url = getServerDomain() + "/store/create";
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      });
-      const payload = await res.json();
-      localStorage.setItem("details", JSON.stringify(payload));
-      dispatch({ type: "LOGIN", payload });
-      traverse(1);
-      // router.push(`/account/storeDetails`);
-      return payload;
+      try {
+        const url = getServerDomain() + "/store/create";
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) {
+          throw new Error('res not ok')
+        }
+        const payload = await res.json();
+
+        // update local storage so that after page refresh, all items (including `user`, are present)
+        const oldStore = JSON.parse(localStorage.getItem('details'));
+        const newStore = {
+          ...oldStore,
+          token: payload.token,
+          store: payload.store,
+        }
+        localStorage.setItem("details", JSON.stringify(newStore));
+        dispatch({ type: "STORE_LOGIN", payload });
+        traverse(1, false);
+        // router.push(`/account/storeDetails`);
+        return payload;
+      } catch (e) {
+        console.log(e)
+      }
     },
   })
 
@@ -62,4 +77,4 @@ const Create = ({ traverse }) => {
   );
 };
 
-export default Create;
+export default CreateBasic;

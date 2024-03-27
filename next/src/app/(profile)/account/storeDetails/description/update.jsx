@@ -8,10 +8,10 @@ import useAuthContext from "@/app/hooks/useAuthContext";
 import ContactForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const CreateContact = ({ traverse, children }) => {
+const UpdateDescription = ({ myStores, traverse, children }) => {
   const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
-
+  console.log("myStores", myStores);
   const {
     isLoading,
     error,
@@ -19,8 +19,8 @@ const CreateContact = ({ traverse, children }) => {
     data,
   } = useMutation({
     mutationFn: async (body) => {
-      // debugger
       try {
+        // debugger
         const url = getServerDomain() + "/store";
         const res = await fetch(url, {
           method: "PUT",
@@ -42,17 +42,17 @@ const CreateContact = ({ traverse, children }) => {
     },
   });
 
-  if (data) return <div>create maybe</div>;
+  if (data) return <div>shouldn't see this..</div>;
 
   const initialValues = {
-    storeName: "",
-    email: "",
-    locationPostal: "",
+    description1: myStores[0]?.description1 || '',
+    description2: myStores[0]?.description2 || '',
+    description3: myStores[0]?.description3 || '',
   };
 
   return (
     <div>
-      <i>(CREATE)</i>
+      <i>(UPDATE)</i>
       <Alert error={error} />
       <ContactForm
         onSubmit={handlePut}
@@ -66,4 +66,4 @@ const CreateContact = ({ traverse, children }) => {
   );
 };
 
-export default CreateContact;
+export default UpdateDescription;

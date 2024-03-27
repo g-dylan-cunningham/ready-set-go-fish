@@ -9,24 +9,15 @@ import { Main } from '@/app/components';
 import Skeleton from './wireframe';
 import formValidation from './validation';
 import { fields } from './config';
-import { getServerDomain } from '@/app/utils';
-import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const StoreContact = ({
+const StorePreferences = ({
+  children,
   onSubmit,
   error,
   isLoading,
-  initialValues = {
-    phone: '',
-    isShipping: false, 
-    isPickup : false,
-    isHidePhone: false,
-    isHideAddress: false,
-  },
-  disabled,
+  initialValues,
 }) => {
-
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues,
@@ -68,20 +59,16 @@ const StoreContact = ({
         ))}
 
         {/* BUTTONS */}
-        <div className='mt-5 flex flex-row justify-end'>
+        <div className='mt-5 flex flex-row justify-between'>
+          {children}
           <button type='submit' className='btn btn-primary btn-active'>
-            Create
+            FINISH
           </button>
         </div>
-        {/* <div className='mt-5 flex flex-row justify-center'>
-          <Link className='link underline text-blue-600' href="/login">
-            Already have an account?
-          </Link>
-        </div> */}
       </form>
     </Main>
   );
 };
 
-export default StoreContact;
+export default StorePreferences;
 

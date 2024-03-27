@@ -53,7 +53,7 @@ const BasicForm = ({
       {!disabled && (
         <div className="mt-5 flex flex-row justify-end">
           <button type="submit" className="btn btn-primary btn-active">
-            Submit
+            NEXT
           </button>
         </div>
       )}

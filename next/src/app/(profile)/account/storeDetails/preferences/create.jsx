@@ -2,15 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { getServerDomain } from "@/app/utils";
 import useAuthContext from "@/app/hooks/useAuthContext";
-import ContactForm from "./form";
+import PreferenceForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const CreateContact = ({ traverse, children }) => {
+const CreatePreferences = ({ traverse, children }) => {
   const { dispatch, user, token } = useAuthContext();
-  const router = useRouter();
+  // const router = useRouter();
 
   const {
     isLoading,
@@ -19,7 +19,6 @@ const CreateContact = ({ traverse, children }) => {
     data,
   } = useMutation({
     mutationFn: async (body) => {
-      // debugger
       try {
         const url = getServerDomain() + "/store";
         const res = await fetch(url, {
@@ -34,7 +33,7 @@ const CreateContact = ({ traverse, children }) => {
           throw new Error("res not ok");
         }
         const payload = await res.json();
-        traverse(1);
+        // shows the message before main content in this component
         return payload;
       } catch (e) {
         console.log(e);
@@ -42,7 +41,7 @@ const CreateContact = ({ traverse, children }) => {
     },
   });
 
-  if (data) return <div>create maybe</div>;
+  if (data) return <h1>Congrats, your store is set up!</h1>;
 
   const initialValues = {
     storeName: "",
@@ -54,16 +53,16 @@ const CreateContact = ({ traverse, children }) => {
     <div>
       <i>(CREATE)</i>
       <Alert error={error} />
-      <ContactForm
+      <PreferenceForm
         onSubmit={handlePut}
         error={error}
         isLoading={isLoading}
         initialValues={initialValues}
       >
         {children}
-      </ContactForm>
+      </PreferenceForm>
     </div>
   );
 };
 
-export default CreateContact;
+export default CreatePreferences;

@@ -5,13 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { getServerDomain } from "@/app/utils";
 import useAuthContext from "@/app/hooks/useAuthContext";
-import ContactForm from "./form";
+import PreferencesForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const CreateContact = ({ traverse, children }) => {
+const UpdatePreferences = ({ myStores, traverse, children }) => {
   const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
-
+  console.log("myStores update prefs", myStores);
   const {
     isLoading,
     error,
@@ -19,8 +19,8 @@ const CreateContact = ({ traverse, children }) => {
     data,
   } = useMutation({
     mutationFn: async (body) => {
-      // debugger
       try {
+        // debugger
         const url = getServerDomain() + "/store";
         const res = await fetch(url, {
           method: "PUT",
@@ -42,28 +42,30 @@ const CreateContact = ({ traverse, children }) => {
     },
   });
 
-  if (data) return <div>create maybe</div>;
-
+  if (data) return <div>shouldn't see this..</div>;
+console.log('myStores[0]?.isHidePhone', myStores[0]?.isHidePhone)
   const initialValues = {
-    storeName: "",
-    email: "",
-    locationPostal: "",
+    isHideAddress: myStores[0]?.isHideAddress || false,
+    isHidePhone: myStores[0]?.isHidePhone || false,
+    isPickUp: myStores[0]?.isPickup || false, // isPickup in express! (casing)
+    isShipping: myStores[0]?.isShipping || false,
   };
+  console.log('init values', initialValues)
 
   return (
     <div>
-      <i>(CREATE)</i>
+      <i>(UPDATE)</i>
       <Alert error={error} />
-      <ContactForm
+      <PreferencesForm
         onSubmit={handlePut}
         error={error}
         isLoading={isLoading}
         initialValues={initialValues}
       >
         {children}
-      </ContactForm>
+      </PreferencesForm>
     </div>
   );
 };
 
-export default CreateContact;
+export default UpdatePreferences;

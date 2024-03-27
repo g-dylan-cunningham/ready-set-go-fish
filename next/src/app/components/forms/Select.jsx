@@ -3,6 +3,7 @@ import InputWrapper from './InputWrapper';
 
 const Select = ({ item, formik, handleChange }) => {
   const { name, type, label, map, list, disabled, ...rest } = item;
+
   return (
     <InputWrapper label={label} formik={formik} name={name}>
       <select

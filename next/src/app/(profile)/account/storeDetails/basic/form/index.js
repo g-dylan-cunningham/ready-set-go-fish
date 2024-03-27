@@ -1,3 +1,3 @@
-import StoreMinimumForm from "./BasicForm";
+import BasicForm from "./BasicForm";
 
-export default StoreMinimumForm;
+export default BasicForm;

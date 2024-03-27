@@ -1,65 +1,70 @@
+import { enumArr, enumMap  } from '@/app/config';
+const { stateList, countryList } = enumArr;
+const { stateMap, countryMap } = enumMap;
 export const fields = [
-  
-  {
-    component: 'Input',
-    label: 'Zip/Postal Code',
-    name: 'postal',
-    required: true,
-  },
   {
     component: 'Checkbox',
     label: 'Is non-US address?',
     name: 'isIntl',
     type: 'checkbox',
+    eligibility: 'global',
   },
   {
     component: 'Input',
     label: 'Street Address 1',
     name: 'street1',
     type: 'text',
-    // required: true,
+    eligibility: 'global',
   },
   {
     component: 'Input',
     label: 'Street Address 2',
     name: 'street2',
     type: 'text',
-    // required: true,
+    eligibility: 'global',
   },
   {
     component: 'Input',
     label: 'City',
     name: 'city',
     type: 'text',
-    // required: true,
+    eligibility: 'global',
   },
   {
-    component: 'Input',
+    component: 'Select',
     label: 'State',
     name: 'state',
-    type: 'text',
-    // required: true,
+    list: stateList,
+    map: stateMap,
+    eligibility: 'US',
   },
-  // {
-  //   component: 'Input',
-  //   label: 'Zip/Postal',
-  //   name: 'postal',
-  //   type: 'text',
-  //   // required: true,
-  // },
   {
     component: 'Input',
-    label: 'Country',
-    name: 'country',
-    type: 'text',
-    // required: true,
+    label: 'Zip/Postal Code',
+    name: 'postal',
+    required: true,
+    eligibility: 'US',
   },
   {
     component: 'Input',
     label: 'State/Region/Province',
     name: 'province',
     type: 'text',
-    // required: true,
+    eligibility: 'intl',
+  },
+  {
+    component: 'Select',
+    label: 'Country',
+    name: 'country',
+    list: countryList,
+    map: countryMap,
+    eligibility: 'intl',
+  },
+  {
+    component: 'Input',
+    label: 'Phone Number (optional)', // TODO support intl phone also for validation purposes in US
+    name: 'phone',
+    eligibility: 'global',
   },
 ];
 

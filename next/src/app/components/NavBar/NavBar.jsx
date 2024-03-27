@@ -7,7 +7,7 @@ import styles from "./styles.module.css";
 
 const Navbar = () => {
   const { logout } = useLogout();
-  const { user, store } = useAuthContext();
+  const { user, details, store } = useAuthContext();
   const [isAdminExpanded, setIsAdminExpanded] = useState(false);
   const toggle = () => {
     console.log("toggling"),

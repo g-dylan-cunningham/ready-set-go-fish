@@ -46,21 +46,7 @@ export const stepReducer = (state, action) => {
       return { ...state, steps: updatedSteps}
     case "SET_STEP":
       const { value } = payload;
-      // console.log('value', value)
       return { ...state, currentIdx: currentIdx + value}
-    // case "ADD_TODO":
-    //   return { ...state, todos: [payload, ...state.todos] }
-    // case "UPDATE_TODO":
-    //   // const todos = ;
-    //   const todos = [ ...state.todos ].map(elem => {
-    //     if (payload.id && elem.id === payload.id) {
-    //       return payload;
-    //     }
-    //     return elem
-    //   })
-    //   return { ...state, todos }
-    // case "DELETE_TODO":
-    //   return { ...state }
     default:
       return { ...state }
   }
@@ -69,13 +55,12 @@ export const stepReducer = (state, action) => {
 const steps = [
   { id: "basic", title: "Basic Info", isPristine: true },
   { id: "contact", title: "Contact", isPristine: true  },
-  { id: "prefs", title: "Preferences", isPristine: true  },
-  { id: "desc", title: "Description", isPristine: true  },
+  { id: "desc", title: "Description", isPristine: true },
+  { id: "prefs", title: "Preferences", isPristine: true },
 ];
 
 export const StepContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(stepReducer, { currentIdx: 0, steps })
-  // console.log('state-', state)
   return (
     <StepContext.Provider value={{ ...state, dispatch }}>
       {children}

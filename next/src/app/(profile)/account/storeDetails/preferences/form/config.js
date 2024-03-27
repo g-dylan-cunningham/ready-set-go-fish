@@ -17,17 +17,17 @@ export const fields = [
     name: 'isHideAddress',
     type: 'checkbox',
   },
-  {
-    component: 'Input',
-    label: 'Phone Number (optional)',
-    name: 'phone',
-    // required: true,
-  },
+  // {
+  //   component: 'Input',
+  //   label: 'Phone Number (optional)',
+  //   name: 'phone',
+  //   // required: true,
+  // },
   {
     component: 'Checkbox',
     label: 'Hide Phone Number?',
     name: 'isHidePhone',
-    // required: true,
+    type: 'checkbox',
   },
 ];
 

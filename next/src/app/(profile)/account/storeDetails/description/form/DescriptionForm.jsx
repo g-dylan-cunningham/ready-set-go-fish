@@ -13,7 +13,8 @@ import { getServerDomain } from '@/app/utils';
 import useAuthContext from '@/app/hooks/useAuthContext';
 import Alert from '@/app/components/forms/Alert';
 
-const AddStore = ({ 
+const DescriptionForm = ({
+  children,
   onSubmit,
   error,
   isLoading,
@@ -22,7 +23,6 @@ const AddStore = ({
     description2: '',
     description3: '',
   },
-  disabled,
 }) => {
 
   const formik = useFormik({
@@ -66,9 +66,10 @@ const AddStore = ({
         ))}
 
         {/* BUTTONS */}
-        <div className='mt-5 flex flex-row justify-end'>
+        <div className='mt-5 flex flex-row justify-between'>
+          {children}
           <button type='submit' className='btn btn-primary btn-active'>
-            Create
+            NEXT
           </button>
         </div>
         {/* <div className='mt-5 flex flex-row justify-center'>
@@ -81,5 +82,5 @@ const AddStore = ({
   );
 };
 
-export default AddStore;
+export default DescriptionForm;
 

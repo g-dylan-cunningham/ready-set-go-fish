@@ -40,6 +40,7 @@ const Signup = ({ params: { specie_id = 1234 } }) => {
           setError(data.message);
           return;
         }
+        console.log('payload', data)
         localStorage.setItem('details', JSON.stringify(data))
         dispatch({ type: "LOGIN", payload: data })
         router.push(`/`);

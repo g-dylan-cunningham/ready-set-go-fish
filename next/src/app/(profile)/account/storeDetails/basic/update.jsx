@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import StoreMinimumForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const BasicForm = ({ myStores, disabled, setDisabled, traverse }) => {
+const UpdateBasic = ({ myStores, disabled, setDisabled, traverse }) => {
   const { dispatch, user, token } = useAuthContext();
   const router = useRouter();
 
@@ -30,6 +30,10 @@ const BasicForm = ({ myStores, disabled, setDisabled, traverse }) => {
           },
           body: JSON.stringify(body),
         });
+        if (!res.ok) {
+          throw new Error('res not ok')
+        }
+        // debugger
         // router.push(`/`);
         // setDisabled(true)
         traverse(1);
@@ -68,4 +72,4 @@ const BasicForm = ({ myStores, disabled, setDisabled, traverse }) => {
   );
 };
 
-export default BasicForm;
+export default UpdateBasic;

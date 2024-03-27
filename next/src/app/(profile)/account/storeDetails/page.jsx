@@ -8,7 +8,8 @@ import Alert from "@/app/components/forms/Alert";
 import { Main } from "@/app/components";
 import useAuthContext from "@/app/hooks/useAuthContext";
 import { getMyStores } from "./api";
-import { StoreDescription, StorePreferences } from "../forms";
+import Preferences from "./preferences";
+import Description from "./description";
 import BasicForm from "./basic";
 import ContactForm from "./contact";
 import { StepContextProvider } from "./contexts/stepContext";
@@ -47,29 +48,15 @@ const StoreDetails = () => {
   // );
 
   const updateCurrentStep = (delta) => {
-    stepDispatch({ type: "SET_STEP", payload: { value: delta }})
-  }
-
-  const traverse = useCallback(
-    (stepValue) => {
-      if (stepValue > 0 && currentIdx < steps.length) {
-        updateCurrentStep(1);
-      }
-      if (stepValue < 0 && currentIdx > 0) {
-        updateCurrentStep(-1);
-      }
-    },
-    [currentIdx]
-  );
-
-
+    stepDispatch({ type: "SET_STEP", payload: { value: delta } });
+  };
 
   // const accessDenied = !token;
   // if (accessDenied) {
   //   redirect('/login')
   // }
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, refetch, error } = useQuery({
     queryKey: ["myStores", token],
     queryFn: getMyStores,
     enabled: !!token,
@@ -77,6 +64,32 @@ const StoreDetails = () => {
 
   const myStores = data?.stores || [];
 
+  const traverse = useCallback(
+    (stepValue, isRefetch) => {
+      if (stepValue > 0 && currentIdx < steps.length) {
+        updateCurrentStep(1);
+      }
+      if (stepValue < 0 && currentIdx > 0) {
+        updateCurrentStep(-1);
+      }
+      if (isRefetch) {
+        refetch();
+      }
+    },
+    [currentIdx]
+  );
+
+  const PrevButton = () => {
+    return (
+      <button
+        type="button"
+        onClick={() => traverse(-1, true)}
+        className="btn btn-ghost float-left"
+      >
+        BACK
+      </button>
+    );
+  };
   if (isLoading) {
     return <div>comp loading</div>;
   }
@@ -100,6 +113,7 @@ const StoreDetails = () => {
 
   const callback = () => {};
   const heading = "Your Store Details:";
+
   return (
     <Main>
       <h1 className="text-2xl font-bold capitalize">{heading}</h1>
@@ -134,36 +148,23 @@ const StoreDetails = () => {
         <BasicForm
           myStores={myStores}
           traverse={traverse}
-          // disabled={isDisabled.minimum}
-          // setDisabled={(bool) => setDisabled("minimum", bool)}
         />
       )}
-      {currentIdx === 1 && <ContactForm traverse={traverse} />}
-      <hr />
-      {currentIdx === 2 && <StorePreferences onSubmit={callback} />}
-      <hr />
-      {currentIdx === 3 && <StoreDescription onSubmit={callback} />}
-
-      <div className="mt-5 w-2/5">
-        {currentIdx > 0 && (
-          <button
-            type="button"
-            onClick={() => traverse(-1)}
-            className="btn btn-ghost float-left"
-          >
-            Previous
-          </button>
-        )}
-        {/* {currentIdx < steps.length - 1 && (
-          <button
-            type="button"
-            onClick={() => traverse(1)}
-            className="btn btn-ghost float-right"
-          >
-            Next
-          </button>
-        )} */}
-      </div>
+      {currentIdx === 1 && (
+        <ContactForm myStores={myStores} traverse={traverse}>
+          <PrevButton />
+        </ContactForm>
+      )}
+      {currentIdx === 2 && (
+        <Description myStores={myStores} traverse={traverse}>
+          <PrevButton />
+        </Description>
+      )}
+      {currentIdx === 3 && (
+        <Preferences myStores={myStores} traverse={traverse}>
+          <PrevButton />
+        </Preferences>
+      )}
     </Main>
   );
 };
