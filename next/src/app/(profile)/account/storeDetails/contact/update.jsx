@@ -50,6 +50,7 @@ const UpdateContact = ({ myStores, traverse, children }) => {
     city: myStores[0]?.address?.city || '',
     state: myStores[0]?.address?.state || '',
     postal: myStores[0]?.address?.postal || '',
+    intlPostal: myStores[0]?.address?.intlPostal || '',
     country: myStores[0]?.address?.country || '',
     province: myStores[0]?.address?.province || '',
     phone: myStores[0]?.phone || '',

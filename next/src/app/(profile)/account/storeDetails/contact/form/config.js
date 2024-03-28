@@ -5,6 +5,7 @@ export const fields = [
   {
     component: 'Checkbox',
     label: 'Is non-US address?',
+    info: 'Store outside of the US are welcome! Please check this box to make sure we collect your address correctly',
     name: 'isIntl',
     type: 'checkbox',
     eligibility: 'global',
@@ -53,6 +54,13 @@ export const fields = [
     eligibility: 'intl',
   },
   {
+    component: 'Input',
+    label: 'Postal Code',
+    name: 'intlPostal',
+    required: true,
+    eligibility: 'intl',
+  },
+  {
     component: 'Select',
     label: 'Country',
     name: 'country',
@@ -64,7 +72,13 @@ export const fields = [
     component: 'Input',
     label: 'Phone Number (optional)', // TODO support intl phone also for validation purposes in US
     name: 'phone',
-    eligibility: 'global',
+    eligibility: 'US',
+  },
+  {
+    component: 'Input',
+    label: 'Phone Number (optional)', // TODO support intl phone also for validation purposes in US
+    name: 'intlPhone',
+    eligibility: 'intl',
   },
 ];
 

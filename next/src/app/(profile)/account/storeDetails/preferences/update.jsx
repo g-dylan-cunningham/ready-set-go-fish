@@ -20,7 +20,6 @@ const UpdatePreferences = ({ myStores, traverse, children }) => {
   } = useMutation({
     mutationFn: async (body) => {
       try {
-        // debugger
         const url = getServerDomain() + "/store";
         const res = await fetch(url, {
           method: "PUT",
@@ -47,7 +46,7 @@ console.log('myStores[0]?.isHidePhone', myStores[0]?.isHidePhone)
   const initialValues = {
     isHideAddress: myStores[0]?.isHideAddress || false,
     isHidePhone: myStores[0]?.isHidePhone || false,
-    isPickUp: myStores[0]?.isPickup || false, // isPickup in express! (casing)
+    isPickUp: myStores[0]?.isPickUp || false, // isPickUp in express! (casing)
     isShipping: myStores[0]?.isShipping || false,
   };
   console.log('init values', initialValues)

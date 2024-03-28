@@ -60,8 +60,8 @@ const createNew = async (req, res) => {  // /store/create POST
       locationPostal,
      } = req.body;
 
-    if (!email || !storeName || !locationPostal) {
-      throw Error("email, store name and postal code are required");
+    if (!email || !storeName) {
+      throw Error("email and store name are required");
     }
 
     if (!validator.isEmail(email)) {
@@ -123,33 +123,46 @@ const updateStore = async (req, res) => { // PUT /store
     if (!req.store || !req.store.id) { // uses middleware to get store id
       throw Error('no store is configured for this user')
     }
-    console.log('req.body (/store/  PUT)', req.body)
+    console.log('req.body (/store/  PUT)', req.body,
+    
+    req.body?.isShipping,
+    req.body?.isPickUp,
+    req.body?.isHidePhone,
+    req.body?.isHideAddress)
 
     // address is a separate table (1:1). If address fields, present, then we'll add them.
     // if not present, we will make sure it's all connected REVIEW
     const addressProps = {
-      ...(req.body?.isIntl && {isIntl: req.body.isIntl}),
+      ...(req.body.hasOwnProperty('isIntl') && {isIntl: req.body.isIntl}),
       ...(req.body?.street1 && {street1: req.body.street1}),
       ...(req.body?.street2 && {street2: req.body.street2}),
       ...(req.body?.city && {city: req.body.city}),
       ...(req.body?.state && {state: req.body.state}),
       ...(req.body?.postal && {postal: req.body.postal}),
+      ...(req.body?.intlPostal && {intlPostal: req.body.intlPostal}),
       ...(req.body?.country && {country: req.body.country}),
       ...(req.body?.province && {province: req.body.province}),
     }
 
     const storeProps = {
-      ...(req.body?.storeName && {storeName: req.body.storeName}),
+      ...(req.body?.storeName && {
+        storeName: req.body.storeName,
+        // generate store path from store name to be used in URLs
+        storePath: req.body.storeName.replace(/\s+/g, '-').toLowerCase(),
+      }),
       ...(req.body?.description1 && {description1: req.body.description1}),
       ...(req.body?.description2 && {description2: req.body.description2}),
       ...(req.body?.description3 && {description3: req.body.description3}),
       ...(req.body?.email && {email: req.body.email}),
       ...(req.body?.phone && {phone: req.body.phone}),
-      ...(req.body?.locationPostal && {locationPostal: req.body.locationPostal}),
-      ...(req.body?.isShipping && {isShipping: req.body.isShipping}),
-      ...(req.body?.isPickup && {isPickup: req.body.isPickup}), // isPickUp in next! (casing)
-      ...(req.body?.isHidePhone && {isHidePhone: req.body.isHidePhone}),
-      ...(req.body?.isHideAddress && {isHideAddress: req.body.isHideAddress}),
+      ...(req.body?.intlPhone && {intlPhone: req.body.intlPhone}),
+      ...(req.body?.postal && {locationPostal: req.body.postal}),
+
+      // using .hasOwnProperty on booleans so that `false` values aren't conditionally not added
+      ...(req.body.hasOwnProperty('isShipping') && {isShipping: req.body.isShipping}),
+      ...(req.body.hasOwnProperty('isPickUp') && {isPickUp: req.body.isPickUp}),
+      ...(req.body.hasOwnProperty('isHidePhone') && {isHidePhone: req.body.isHidePhone}),
+      ...(req.body.hasOwnProperty('isHideAddress') && {isHideAddress: req.body.isHideAddress}),
     }
 
     console.log('addressPorps;', addressProps, req.store?.id);

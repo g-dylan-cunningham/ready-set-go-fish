@@ -22,7 +22,7 @@ async function main() {
       email: 'alice@prisma.io',
       phone: '6023500692',
       isShipping: false,
-      isPickup: true,
+      isPickUp: true,
       locationPostal: "55555",
     },
   })
@@ -129,7 +129,7 @@ main()
 //       "phone": true,
 //       "locationPostal": true,
 //       "isShipping": true,
-//       "isPickup": true,
+//       "isPickUp": true,
 //       "isHidePhone": true,
 //       "isHideAddress": true,
 //       "createdAt": true,

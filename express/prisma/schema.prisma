@@ -51,14 +51,16 @@ model Store {
   users       User[] 
   address    Address? // one-to-one referential
   storeName   String @unique
+  storePath   String?
   description1  String?
   description2  String?
   description3  String?
   email        String
   phone        String?
-  locationPostal String
+  intlPhone     String?
+  locationPostal String?
   isShipping  Boolean  @default(true)
-  isPickup  Boolean  @default(true)
+  isPickUp  Boolean  @default(true)
   isHidePhone Boolean  @default(true)
   isHideAddress Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -133,6 +135,7 @@ model Address {
   city        String?
   state       State?
   postal      String?
+  intlPostal  String?
   country     Country @default(UnitedStates)
   province    String?
   createdAt   DateTime @default(now())

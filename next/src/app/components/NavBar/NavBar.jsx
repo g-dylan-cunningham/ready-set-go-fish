@@ -34,33 +34,21 @@ const Navbar = () => {
           <li>
             <ul className="menu menu-horizontal px-1 pt-0">
               <li>
-                {!user || (user && !user.email) ? (
-                  <ul className="menu menu-horizontal px-1 pt-0">
-                    <li>
-                      <Link href="/signup">
-                        <h1>Signup</h1>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/login">
-                        <h1>Login</h1>
-                      </Link>
-                    </li>
-                  </ul>
-                ) : (
-                  <span>{user.email}</span>
-                )}
-              </li>
-
-              <li>
-                {" "}
-                {user?.email && (
-                  <span>
-                    <button type="button" onClick={logout}>
-                      LOGOUT
-                    </button>
-                  </span>
-                )}
+                {!user ||
+                  (user && !user.email && (
+                    <ul className="menu menu-horizontal px-1 pt-0">
+                      <li>
+                        <Link href="/signup">
+                          <h1>Signup</h1>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/login">
+                          <h1>Login</h1>
+                        </Link>
+                      </li>
+                    </ul>
+                  ))}
               </li>
             </ul>
           </li>
@@ -79,16 +67,25 @@ const Navbar = () => {
                     className={`${styles.accountIcon} p-0`}
                   />
                 </div>
-                {isAdminExpanded && (
-                  // <ul className="p-2">
+                {isAdminExpanded && user?.email && (
+                  <ul className="pt-2">
+                    <li>
+                      <span>Hello, {user.email}</span>
+                    </li>
                     <li>
                       <Link href="/account/storeDetails" onClick={toggle}>
                         {store?.storeName ? "Store Profile" : "Create Store"}
                       </Link>
                     </li>
-                  // </ul>
+                    <li>
+                      <span>
+                        <button type="button" onClick={logout}>
+                          LOGOUT
+                        </button>
+                      </span>
+                    </li>
+                  </ul>
                 )}
-
               </li>
             </ul>
           </li>
