@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation } from "@tanstack/react-query";
-import { getServerDomain } from "@/app/utils";
+import { getServerDomain, updateLocalStorageWithNewStore, deepEqual } from "@/app/utils";
 import useAuthContext from "@/app/hooks/useAuthContext";
 import { useRouter } from "next/navigation";
 import StoreMinimumForm from "./form";
@@ -13,7 +13,7 @@ const UpdateBasic = ({ myStores, disabled, setDisabled, traverse }) => {
   const initialValues = {
     storeName: myStores[0]?.storeName,
     email: myStores[0]?.email,
-    locationPostal: myStores[0]?.locationPostal,
+    // locationPostal: myStores[0]?.locationPostal,
   };
   const {
     error,
@@ -21,23 +21,28 @@ const UpdateBasic = ({ myStores, disabled, setDisabled, traverse }) => {
   } = useMutation({
     mutationFn: async (body) => {
       try {
-        const url = getServerDomain() + "/store";
-        const res = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(body),
-        });
-        if (!res.ok) {
-          throw new Error('res not ok')
+        if (!deepEqual(body, initialValues)) {
+          const url = getServerDomain() + "/store";
+          const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(body),
+          });
+          if (!res.ok) {
+            throw new Error('res not ok')
+          }
+          const payload = await res.json
+          updateLocalStorageWithNewStore(payload);
+          traverse(1, true);
+          return await res.json();
+        } else {
+          console.log('no change, skip submit');
+          return traverse(1);
         }
-        // debugger
-        // router.push(`/`);
-        // setDisabled(true)
-        traverse(1);
-        return await res.json();
+        
       } catch (e) {
         console.log(e)
         return null;

@@ -95,43 +95,13 @@ const StoreDetails = () => {
   }
   if (error) return "An error has occurred: " + error.message;
 
-  // console.log("mystores", myStores);
-
-  /**
-   * STEPS:
-   * Basic info
-   * Address
-   * Description
-   * Preferences
-   *
-   * PROPERTIES:
-   * is section pristine (allows skipping without warning)
-   * is section dirty && unsaved (shows warning modal)
-   * current section
-   *
-   */
-
-  const callback = () => {};
   const heading = "Your Store Details:";
 
   return (
     <Main>
       <h1 className="text-2xl font-bold capitalize">{heading}</h1>
+
       <Alert error={error} />
-
-      {(myStores.length === 0 || error === noStoresConfigured) && ( // TODO fix this
-        <div>
-          <div className="mt-5 flex flex-row justify-center">
-            <Link
-              className="link underline text-blue-600"
-              href="/account/storeDetails/create"
-            >
-              Create my store
-            </Link>
-          </div>
-        </div>
-      )}
-
       <ul className="steps">
         {steps.map((step, i) => (
           <li

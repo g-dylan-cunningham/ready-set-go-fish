@@ -8,11 +8,10 @@ import styles from "./styles.module.css";
 const Navbar = () => {
   const { logout } = useLogout();
   const { user, details, store } = useAuthContext();
+  // console.log("store", store);
   const [isAdminExpanded, setIsAdminExpanded] = useState(false);
   const toggle = () => {
-    console.log("toggling"),
-      isAdminExpanded,
-      setIsAdminExpanded(!isAdminExpanded);
+    isAdminExpanded, setIsAdminExpanded(!isAdminExpanded);
   };
 
   return (
@@ -77,6 +76,17 @@ const Navbar = () => {
                         {store?.storeName ? "Store Profile" : "Create Store"}
                       </Link>
                     </li>
+                    {store?.storePath && ( // if store is configured, show myStore link
+                      <li>
+                        <Link
+                          href={`/account/${store?.storePath}`}
+                          onClick={toggle}
+                        >
+                          {store?.storePath && "My Store"}
+                        </Link>
+                      </li>
+                    )}
+
                     <li>
                       <span>
                         <button type="button" onClick={logout}>

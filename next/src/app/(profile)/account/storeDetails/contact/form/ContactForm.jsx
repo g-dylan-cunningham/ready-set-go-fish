@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import { Field } from "@/app/components/forms";
 import { Main } from "@/app/components";
 import Skeleton from "./wireframe";
-import formValidation from "./validation";
+import validationSchema from "./validation";
 import { fields } from "./config";
 import Alert from "@/app/components/forms/Alert";
 
@@ -30,7 +30,7 @@ const ContactForm = ({
     enableReinitialize: true, // need this to take latest values
     initialValues,
     onSubmit: onSubmit,
-    validate: formValidation,
+    validationSchema,
   });
 
   const handleChange = (e) => {
@@ -51,7 +51,7 @@ const ContactForm = ({
 
       <form
         onSubmit={formik.handleSubmit}
-        className="flex flex-col justify-between"
+        className="flex flex-col justify-between max-w-md mx-auto"
       >
         <Alert error={error} />
 

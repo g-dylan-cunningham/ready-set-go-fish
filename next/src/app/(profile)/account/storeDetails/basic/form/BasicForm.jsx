@@ -3,26 +3,24 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { isPromise, useFormik } from "formik";
 import { Field } from "@/app/components/forms";
-import formValidation from "./validation";
+import validationSchema from "./validation";
 import { fields } from "./config";
 import useStepContext from "../../contexts/useStepContext";
 
 const BasicForm = ({
   onSubmit,
   initialValues,
-  disabled,
 }) => {
   const { dispatch } = useStepContext();
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues,
     onSubmit: onSubmit,
-    validate: () => formValidation,
+    validationSchema,
   });
 
   useEffect(() => setIsPristine(true), [])
   const [isPristine, setIsPristine] = useState(true)
-
 
   const handleChange = (e) => {
     if (isPristine) {
@@ -40,23 +38,23 @@ const BasicForm = ({
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="flex flex-col justify-between"
+      className="flex flex-col justify-between max-w-md mx-auto"
     >
       {fields.map((item, i) => (
         <Field
           key={i}
-          item={{ ...item, disabled }}
+          item={{
+            ...item,
+          }}
           formik={formik}
           handleChange={handleChange}
         />
       ))}
-      {!disabled && (
-        <div className="mt-5 flex flex-row justify-end">
-          <button type="submit" className="btn btn-primary btn-active">
-            NEXT
-          </button>
-        </div>
-      )}
+      <div className="mt-5 flex flex-row justify-end">
+        <button type="submit" className="btn btn-primary btn-active">
+          NEXT
+        </button>
+      </div>
     </form>
   );
 };

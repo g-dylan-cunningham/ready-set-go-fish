@@ -69,14 +69,14 @@ export const fields = [
     eligibility: 'intl',
   },
   {
-    component: 'Input',
-    label: 'Phone Number (optional)', // TODO support intl phone also for validation purposes in US
+    component: 'PhoneInput',
+    label: 'Phone Number (optional)',
     name: 'phone',
     eligibility: 'US',
   },
   {
     component: 'Input',
-    label: 'Phone Number (optional)', // TODO support intl phone also for validation purposes in US
+    label: 'Phone Number (optional)',
     name: 'intlPhone',
     eligibility: 'intl',
   },

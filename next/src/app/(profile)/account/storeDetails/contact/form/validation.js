@@ -1,20 +1,31 @@
-import { countDecimals } from '@/app/utils';
-const emailValidRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-const validationSchema = (values, props) => {
-  
-  const errors = {};
-  // if (!values.email) {
-  //   errors.email = 'Please add your email - we will never sell your info';
-  // } else if (!values.email.match(emailValidRegex)) {
-  //   errors.email = 'Enter a valid email'
-  // }
+import * as yup from "yup";
 
-  // if (values.password !== values.confirm) {
-  //   errors.password = 'Password must match Confirm Passworld';
-  //   errors.confirm = 'Password must match Confirm Passworld';
-  // }
-
-  return errors;
-};
-
-export default validationSchema;
+export default yup.object().shape({
+  street1: yup
+    .string()
+    .max(50),
+    // .min(2)
+    // .required("Store name is required"),
+  street2: yup
+    .string()
+    .max(50),
+  city: yup
+    .string()
+    .max(50)
+    .required("City is required"),
+  state: yup
+    .string()
+    .max(2)
+    .min(2),
+  postal: yup
+    .string()
+    .max(5)
+    .min(5),
+  phone: yup.object().shape({
+    value: yup
+      .string()
+      .max(10)
+      .min(10),
+  })
+    // .min(2)
+});

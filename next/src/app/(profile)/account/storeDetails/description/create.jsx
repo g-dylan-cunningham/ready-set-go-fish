@@ -34,7 +34,7 @@ const CreateDescription = ({ traverse, children }) => {
           throw new Error("res not ok");
         }
         const payload = await res.json();
-        traverse(1);
+        traverse(1, true);
         return payload;
       } catch (e) {
         console.log(e);

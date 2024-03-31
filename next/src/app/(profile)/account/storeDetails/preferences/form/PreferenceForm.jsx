@@ -46,7 +46,7 @@ const StorePreferences = ({
 
       <form
         onSubmit={formik.handleSubmit}
-        className='flex flex-col justify-center max-w-lg'
+        className='flex flex-col justify-between max-w-md mx-auto'
       >
         <Alert error={error} />
         {fields.map((item, i) => (

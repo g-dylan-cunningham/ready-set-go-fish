@@ -1,8 +1,15 @@
-import { countDecimals, getMinSkuPrice, getServerDomain } from './utils';
+import {
+  countDecimals,
+  getMinSkuPrice,
+  getServerDomain,
+  updateLocalStorageWithNewStore,
+  deepEqual,
+} from "./utils";
 
-
-
-
-export { countDecimals, getMinSkuPrice, getServerDomain };
-
-
+export {
+  countDecimals,
+  getMinSkuPrice,
+  getServerDomain,
+  updateLocalStorageWithNewStore,
+  deepEqual,
+};

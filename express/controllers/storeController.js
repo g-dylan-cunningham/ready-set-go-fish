@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const fs = require("fs");
-const { createToken } = require('./utils/tokens')
+const { createToken, getStorePath } = require('./utils')
 
 const getAll = async (req, res) => {
   const stores = await prisma.Store.findMany({})
@@ -68,27 +68,38 @@ const createNew = async (req, res) => {  // /store/create POST
       throw Error("Email is not valid");
     }
 
-    // is storeName unique?
-    const exists = await prisma.Store.findUnique({
+    
+    const storeNameExists = await prisma.Store.findUnique({
       where: {
         storeName,
       },
     });
-    if (exists) {
+
+    const storePath = getStorePath(req.body.storeName);
+    const storePathExists = await prisma.Store.findFirst({
+      where: {
+        storePath,
+      },
+    });
+    
+    if (storeNameExists) {
       throw Error("storeName already in use");
     }
-    // console.log('req.user.id', req.user.id)
+    if (storePathExists) {
+      throw Error("Store name is too similar to another already claimed name. (storePath already in use)");
+    }
 
     const address = await prisma.Address.create({
       data: {}
     })
-  console.log('address', address)
+
     const store = await prisma.Store.create({
       data: {
         users: {
           connect: { id: req.user.id}
         },
         storeName,
+        storePath,
         email,
         phone,
         locationPostal,
@@ -118,7 +129,7 @@ const createNew = async (req, res) => {  // /store/create POST
  * @param {*} req 
  * @param {*} res 
  */
-const updateStore = async (req, res) => { // PUT /store
+const updateStore = async (req, res) => { // PUT /stores
   try {
     if (!req.store || !req.store.id) { // uses middleware to get store id
       throw Error('no store is configured for this user')
@@ -147,15 +158,17 @@ const updateStore = async (req, res) => { // PUT /store
     const storeProps = {
       ...(req.body?.storeName && {
         storeName: req.body.storeName,
-        // generate store path from store name to be used in URLs
-        storePath: req.body.storeName.replace(/\s+/g, '-').toLowerCase(),
+        storePath: getStorePath(req.body.storeName),
       }),
       ...(req.body?.description1 && {description1: req.body.description1}),
       ...(req.body?.description2 && {description2: req.body.description2}),
       ...(req.body?.description3 && {description3: req.body.description3}),
       ...(req.body?.email && {email: req.body.email}),
-      ...(req.body?.phone && {phone: req.body.phone}),
-      ...(req.body?.intlPhone && {intlPhone: req.body.intlPhone}),
+      ...(req.body?.phone?.value && {
+        phone: req.body.phone?.value,
+        intlPhone: req.body.phone?.formattedValue, // add US formatted phone string here
+      }),
+      ...(req.body?.intlPhone && {intlPhone: req.body.intlPhone}), // allow freeform here (also US formatted number)
       ...(req.body?.postal && {locationPostal: req.body.postal}),
 
       // using .hasOwnProperty on booleans so that `false` values aren't conditionally not added

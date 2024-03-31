@@ -3,6 +3,7 @@ import Input from './Input';
 import TextArea from './TextArea';
 import Select from './Select';
 import Checkbox from './Checkbox';
+import PhoneInput from './PhoneInput';
 
 const Field = ({ item, ...rest }) => {
   const { component } = item;
@@ -15,6 +16,8 @@ const Field = ({ item, ...rest }) => {
       return <Select item={item} {...rest} />;
     case 'Checkbox':
       return <Checkbox item={item} {...rest} />;
+    case 'PhoneInput':
+      return <PhoneInput item={item} {...rest} />;
     case 'default':
       return <div>no form component</div>;
   }

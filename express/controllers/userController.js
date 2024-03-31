@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const fs = require("fs");
-const { createToken } = require('./utils/tokens')
+const { createToken } = require('./utils')
 
 const getAll = async (req, res) => {
   const users = await prisma.User.findMany({

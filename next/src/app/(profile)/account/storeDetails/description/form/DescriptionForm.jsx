@@ -53,7 +53,7 @@ const DescriptionForm = ({
 
       <form
         onSubmit={formik.handleSubmit}
-        className='flex flex-col justify-between'
+        className='flex flex-col justify-between max-w-md mx-auto'
       >
         <Alert error={error} />
         {fields.map((item, i) => (
