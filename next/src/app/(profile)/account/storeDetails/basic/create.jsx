@@ -33,7 +33,6 @@ const CreateBasic = ({ traverse }) => {
           },
           body: JSON.stringify(body),
         });
-        debugger
         if (!res.ok) {
           // throw new Error('res not ok')
           const error = await res.json();
@@ -49,7 +48,7 @@ const CreateBasic = ({ traverse }) => {
         updateLocalStorageWithNewStore(payload);
 
         dispatch({ type: "STORE_LOGIN", payload });
-        traverse(1, false);
+        traverse(1, true);
         // router.push(`/account/storeDetails`);
         return payload;
       } catch (e) {

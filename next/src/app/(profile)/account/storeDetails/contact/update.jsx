@@ -26,8 +26,6 @@ const UpdateContact = ({ myStores, traverse, children }) => {
     intlPhone: myStores[0]?.intlPhone || ''
   };
 
-  console.log('initial vals', initialValues)
-
   const {
     isLoading,
     error,

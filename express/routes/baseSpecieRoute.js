@@ -13,6 +13,32 @@ router.get('/all', async (req, res) => {
   res.json(baseSpecies);
 })
 
+router.get('/speciesFromCategory/:category', async (req, res) => {
+  try {
+    const { category } = req.params;
+    const baseSpecies = await prisma.BaseSpecie.findMany({
+      where: {
+        category
+      },
+      select: {
+        id: true,
+        species: true,
+        scientificName: true,
+        commonName: true,
+      }
+    })
+    console.log('baseSepecie', baseSpecies)
+  
+    res.json(baseSpecies);
+  } catch (e) {
+    console.log('e)', e);
+    res.json({error: e})
+  }
+
+})
+
+
+
 router.delete('/all', async (req, res) => {
   const result = await prisma.BaseSpecie.deleteMany();
   res.json({ result })

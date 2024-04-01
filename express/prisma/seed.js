@@ -1,87 +1,130 @@
 const { PrismaClient } = require('@prisma/client')
 const cuid = require('cuid')
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
+// const baseSpecies = require('../mocks/baseSpecie.json')
 
 async function main() {
-  const user1 = await prisma.User.upsert({
-    where: { id: 'cltlr872y0000e6odte4ze9d0'},
+  const gdylanc = await prisma.User.upsert({
+    where: { id: 'clughtch10000dayncjvw28gt'},
     update: {},
-    create: {
-      email: 'asdf@asdf.com',
-      displayName: 'asdf@asdf.com',
-      password: '$2b$10$pkuiEDa8v.U3YOWi8C8EMOk1sLLfKlFnizuGNh1Sga9BsbSd1iz0u',
-      locationPostal: "12345",
+    create:   {
+      "displayName": "gdylanc@gmail.com",
+      "password": "$2b$10$1kbmxCprEOA0wowyAgEEyulE7lNq3K1yvA0nWr14mo3jgIkhi3rIS",
+      "email": "gdylanc@gmail.com",
+      "locationPostal": "12344",
+      "firstName": null,
+      "middleName": null,
+      "birthday": null,
+      "lastName": null,
+      "isSeller": true,
+      "createdAt": "2024-04-01T05:11:37.573Z",
+      "updatedAt": "2024-04-01T05:11:37.573Z"
     },
   })
-  const wetSpot = await prisma.Store.upsert({
-    where: { id: 'wet-spot-store-id'},
+  const readySetGoFish = await prisma.Store.upsert({
+    where: { id: 'clughto8a0002daynyqjukmwr'},
     update: {},
-    create: {
-      storeName: 'The Wet Spot',
-      description1: 'Beautiful fish available',
-      email: 'alice@prisma.io',
-      phone: '6023500692',
-      isShipping: false,
-      isPickUp: true,
-      locationPostal: "55555",
+    create:  {
+      "storeName": "Ready Set Go Fish",
+      "storePath": "ready-set-go-fish",
+      "description1": "Just a few nice cichlids for sale",
+      "description2": "Very high quality",
+      "description3": "Great Service",
+      "email": "readyset@gmail.com",
+      "phone": "6023500692",
+      "intlPhone": "+1(602) 350-0692",
+      "locationPostal": "85022",
+      "isShipping": false,
+      "isPickUp": true,
+      "isHidePhone": true,
+      "isHideAddress": true,
+      "createdAt": "2024-04-01T05:11:52.811Z",
+      "updatedAt": "2024-04-01T05:12:36.469Z"
     },
   })
-  const baseTrout = await prisma.BaseSpecie.upsert({
-    where: { id: 'malawi-trout-id'},
+  const baseMalawiTrout = await prisma.baseSpecie.upsert({
+    where: { id: 'clughgqak0000w5weqia5knqd'},
     update: {},
-    create: {
-      id: 'malawi-trout-id',
-      commonName: 'Malawi trout',
-      scientificName: 'Der Malawi trout',
-      description: 'Beautiful troue fish',
-      maxSize: 233,
-      temperament: 'temperament',
-      diet: 'diet',
-      compatability: 'compatability',
-    },
-  });
-
-  const storeTrout = await prisma.StoreSpecie.upsert({
-    where: { id: 'my-malawi-trout-id'},
-    update: {},
-    create: {
-      id: 'my-malawi-trout-id',
-      baseSpecieId: 'malawi-trout-id',
-      commonName: 'my Malawi trout',
-      scientificName: 'my Der Malawi trout',
-      description: 'my Beautiful troue fish',
-      maxSize: 233,
-      temperament: 'my temperament',
-      diet: 'my diet',
-      compatability: 'my compatability',
-    },
-  });
-
-  const troutSku1 = await prisma.Sku.upsert({
-    where: { id: 'sku1'},
-    update: {},
-    create: {
-      id: 'sku1',
-      storeSpecieId: 'my-malawi-trout-id',
-      price: "14",
-      sex: "MALE",
-      size: "L"
+    create:   {
+      "id": "clughgqak0000w5weqia5knqd",
+      "region": "MALAWI",
+      "subgroup": "OTHER",
+      "category": "HAP",
+      "commonName": "Malawi Trout",
+      "scientificName": "Champsochromis caeruleus",
+      "kingdom": "Animalia",
+      "phylum": "Chordata",
+      "class": "Actinopterygli",
+      "order": "Cichliformes",
+      "family": "Cichlidae",
+      "genus": "Chamsochromis",
+      "species": "Champsochromis caeruleus",
+      "description": "Large growing long finned predator hap",
+      "maxSize": 12,
+      "temperament": "aggressive",
+      "diet": "carnivore",
+      "compatability": "",
+      "createdAt": "2024-04-01T05:01:48.956Z",
+      "updatedAt": "2024-04-01T05:06:24.159Z"
     },
   })
-  const troutSku2 = await prisma.Sku.upsert({
-    where: { id: 'sku2' },
-    update: {},
-    create: {
-      id: 'sku2',
-      storeSpecieId: 'my-malawi-trout-id',
-      price: "11",
-      sex: "MALE",
-      size: "XS"
-    },
-  });
+  // const baseTrout = await prisma.BaseSpecie.upsert({
+  //   where: { id: 'malawi-trout-id'},
+  //   update: {},
+  //   create: {
+  //     id: 'malawi-trout-id',
+  //     commonName: 'Malawi trout',
+  //     scientificName: 'Der Malawi trout',
+  //     genus: '',
+  //     description: 'Beautiful troue fish',
+  //     maxSize: 233,
+  //     temperament: 'temperament',
+  //     diet: 'diet',
+  //     compatability: 'compatability',
+  //   },
+  // });
+
+  // const storeTrout = await prisma.StoreSpecie.upsert({
+  //   where: { id: 'my-malawi-trout-id'},
+  //   update: {},
+  //   create: {
+  //     id: 'my-malawi-trout-id',
+  //     baseSpecieId: 'malawi-trout-id',
+  //     commonName: 'my Malawi trout',
+  //     scientificName: 'my Der Malawi trout',
+  //     description: 'my Beautiful troue fish',
+  //     maxSize: 233,
+  //     temperament: 'my temperament',
+  //     diet: 'my diet',
+  //     compatability: 'my compatability',
+  //   },
+  // });
+
+  // const troutSku1 = await prisma.Sku.upsert({
+  //   where: { id: 'sku1'},
+  //   update: {},
+  //   create: {
+  //     id: 'sku1',
+  //     storeSpecieId: 'my-malawi-trout-id',
+  //     price: "14",
+  //     sex: "MALE",
+  //     size: "L"
+  //   },
+  // })
+  // const troutSku2 = await prisma.Sku.upsert({
+  //   where: { id: 'sku2' },
+  //   update: {},
+  //   create: {
+  //     id: 'sku2',
+  //     storeSpecieId: 'my-malawi-trout-id',
+  //     price: "11",
+  //     sex: "MALE",
+  //     size: "XS"
+  //   },
+  // });
 
 
-  console.log({ wetSpot, baseTrout, storeTrout})//, troutSku })
+  console.log({ gdylanc, readySetGoFish, baseMalawiTrout})//, troutSku })
 }
 
 main()

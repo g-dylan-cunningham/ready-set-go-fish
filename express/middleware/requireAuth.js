@@ -3,7 +3,10 @@ const prisma = require("../db/prisma");
 
 const requireAuth = async (req, res, next) => {
   const { authorization } = req.headers;
-  if (!authorization) {
+  console.log('/myStores exemption', req.path === "myStores", req.method === "GET")
+  if (!authorization && (
+    !(req.path === "myStores" && req.method === "GET")
+  )) {
     return res.status(401).json({ message: 'Authorization token required'})
   }
 

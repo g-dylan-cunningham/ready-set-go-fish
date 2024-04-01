@@ -8,7 +8,7 @@ import styles from "./styles.module.css";
 const Navbar = () => {
   const { logout } = useLogout();
   const { user, details, store } = useAuthContext();
-  // console.log("store", store);
+  console.log("store1", store);
   const [isAdminExpanded, setIsAdminExpanded] = useState(false);
   const toggle = () => {
     isAdminExpanded, setIsAdminExpanded(!isAdminExpanded);
@@ -73,16 +73,26 @@ const Navbar = () => {
                     </li>
                     <li>
                       <Link href="/account/storeDetails" onClick={toggle}>
-                        {store?.storeName ? "Store Profile" : "Create Store"}
+                        {store?.storeName ? "Store Settings" : "Create Store"}
                       </Link>
                     </li>
+                    {store?.storePath && ( // if store is configured, show View Store link
+                      <li>
+                        <Link
+                          href={`/store/${store?.storePath}`}
+                          onClick={toggle}
+                        >
+                          {store?.storePath && "View Store"}
+                        </Link>
+                      </li>
+                    )}
                     {store?.storePath && ( // if store is configured, show myStore link
                       <li>
                         <Link
-                          href={`/account/${store?.storePath}`}
+                          href={`/${store?.storePath}/addItem`} // should go to add Item page if no items configured
                           onClick={toggle}
                         >
-                          {store?.storePath && "My Store"}
+                          {store?.storePath && "Manage Store"}
                         </Link>
                       </li>
                     )}

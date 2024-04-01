@@ -9,19 +9,29 @@ datasource db {
 }
 
 model BaseSpecie {
-  id       String   @id @default(cuid())
-  region          Region   @default(OTHER)
-  subgroup        Subgroup @default(OTHER)
-  category        Category @default(OTHER)
-  commonName     String
-  scientificName String
+  id              String        @id @default(cuid())
+  region          Region        @default(OTHER)
+  subgroup        Subgroup      @default(OTHER)
+  category        Category      @default(OTHER)
+  commonName      String
+  scientificName  String
+
+
+  kingdom         String        @default("Animalia")
+  phylum          String        @default("Chordata")
+  class           String        @default("Actinopterygli")
+  order           String        @default("Cichliformes")
+  family          String        @default("Cichlidae")
+  genus           String
+  species         String
+
   description     String
-  maxSize        Int
+  maxSize         Int
   temperament     String
   diet            String
   compatability   String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   store_specie    StoreSpecie[]
   images          Image[]
 }
@@ -72,7 +82,7 @@ model Sku {
   id            String   @id @default(cuid())
   storeSpecies     StoreSpecie  @relation(fields: [storeSpecieId], references: [id], onDelete: Cascade)
   storeSpecieId   String
-  size              Size     @default(M)
+  size              Int     // Size     @default(M)
   price             String
   sex               Sex      @default(UNSEXED)
   quantity          Int      @default(1)
@@ -149,17 +159,16 @@ enum Category {
   OTHER
 }
 
-enum Size {
-  XXS
-  XS
-  S
-  M
-  L
-  XL
-  XXL
-  XXXL
-  VARIETY
-}
+// enum Size {
+//   XXS
+//   XS
+//   S
+//   M
+//   L
+//   XL
+//   XXL
+//   XXXL
+// }
 
 enum Sex {
   MALE

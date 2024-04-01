@@ -1,6 +1,7 @@
 const enumArr = {
   sizeList: ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL", "VARIETY"],
   sexList: ["MALE", "FEMALE", "UNSEXED", "BREEDINGGROUP"],
+  regionList: ["Malawi", "Tanganyika", "Victoria", "New World", "Other"],
   categoryList: ["PEACOCK", "HAP", "TANGANYIKA", "OTHER"],
   countryList: [
     "UnitedStates",
@@ -81,7 +82,7 @@ const enumArr = {
     "WV",
     "WI",
     "WY",
-  ]
+  ],
 };
 
 const enumMap = {
@@ -101,6 +102,13 @@ const enumMap = {
     FEMALE: "female",
     UNSEXED: "unsexed",
     BREEDINGGROUP: "breeding group",
+  },
+  regionMap: {
+    MALAWI: "Malawi",
+    TANGANYIKA: "Tanganyika",
+    VICTORIA: "Victoria",
+    NEW_WORLD: "New World",
+    OTHER: "Other",
   },
   categoryMap: {
     PEACOCK: "Peacock",
@@ -187,7 +195,7 @@ const enumMap = {
     WV: "WV",
     WI: "WI",
     WY: "WY",
-  }
+  },
 };
 
 export { enumArr, enumMap };

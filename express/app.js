@@ -5,6 +5,7 @@ const app = express();
 
 
 const storeRoute = require("./routes/storeRoute");
+const unprotectedStoreRoute = require("./routes/unprotectedStoreRoute");
 const skuRoute = require("./routes/skuRoute");
 const baseSpecieRoute = require("./routes/baseSpecieRoute");
 const storeSpecieRoute = require("./routes/storeSpecieRoute");
@@ -29,6 +30,7 @@ app.use('/sku', skuRoute);
 app.use('/baseSpecie', baseSpecieRoute);
 app.use('/storeSpecie', storeSpecieRoute);
 app.use('/user', userRoute);
+app.use('/storeRead', unprotectedStoreRoute)
 // app.use('/sku', skuRoute);
 
 // //test api
