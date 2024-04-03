@@ -5,7 +5,6 @@ const createToken = (id, storeId) => {
 };
 
 const getStorePath = (storeName) => { // generate store path from store name to be used in URLs
-  debugger
   return storeName.replace(/\s+/g, '-').toLowerCase();
 }
 

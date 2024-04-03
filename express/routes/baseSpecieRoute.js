@@ -13,6 +13,42 @@ router.get('/all', async (req, res) => {
   res.json(baseSpecies);
 })
 
+
+router.get('/categoriesFromRegion/:region', async (req, res) => {
+  try {
+    const { region } = req.params;
+    let list, map;
+    if (region === 'Malawi') {
+      list = ['PEACOCK', 'HAP', 'MBUNA'];
+      map = {PEACOCK: 'Peacock', HAP: 'Hap', MBUNA: 'Mbuna'};
+    } else if (region === 'Tanganyika') {
+      list = ['FEATHERFIN', 'FRONTOSA', 'JULIOCHROMIS', 'LAMPROLOGINES', 'TROPHEUS', 'MISC_TANGANYIKA'];
+      map = {FEATHERFIN: 'Feather Fin', FRONTOSA: 'Frontosa', JULIOCHROMIS: 'Julidochromis', LAMPROLOGINES: 'Lamprologines', TROPHEUS: 'Tropheus', MISC_TANGANYIKA: 'Misc Tanganyikans'};
+    } else if (region === 'Victoria') {
+      list = ['Victorians'];
+      map = {VICTORIAN_CICHLIDS: 'Victorians'};
+    } else {
+      throw new Error('unsupported regions', region)
+    }
+ 
+    const categoryConfig = {
+        component: 'Select',
+        label: 'Category',
+        name: 'category',
+        disabled: false,
+        list,
+        map,
+      };
+    res.json([categoryConfig]);
+  } catch (e) {
+    console.log('e)', e);
+    res.json({error: e})
+  }
+
+})
+
+
+
 router.get('/speciesFromCategory/:category', async (req, res) => {
   try {
     const { category } = req.params;
@@ -27,9 +63,25 @@ router.get('/speciesFromCategory/:category', async (req, res) => {
         commonName: true,
       }
     })
-    console.log('baseSepecie', baseSpecies)
-  
-    res.json(baseSpecies);
+
+    let list = [];
+    let map = {};
+    for (let i = 0; i < baseSpecies.length; i++ ) {
+      list.push(baseSpecies[i].id);
+      map[baseSpecies[i].id] = baseSpecies[i].species
+    }
+    console.log('list Map', list, map)
+    const speciesConfig = {
+      component: 'Select',
+      label: 'Species',
+      name: 'specie',
+      disabled: false,
+      list,
+      map,
+    };
+    console.log('speciesConfig', speciesConfig)
+    // disabled: false,
+    res.json([speciesConfig]);
   } catch (e) {
     console.log('e)', e);
     res.json({error: e})
