@@ -22,7 +22,7 @@ const requireAuth = async (req, res, next) => {
       },
     })
 
-    req.store = {id: storeId};
+    req.store = {id: storeId };
 
     next();
   } catch (error) {

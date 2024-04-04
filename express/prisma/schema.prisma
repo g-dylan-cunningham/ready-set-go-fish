@@ -22,13 +22,13 @@ model BaseSpecie {
   class           String        @default("Actinopterygli")
   order           String        @default("Cichliformes")
   family          String        @default("Cichlidae")
-  genus           String
+  genus           String        @default("Aulonocara")
   species         String
 
   description     String
-  maxSize         Int
-  temperament     String
-  diet            String
+  maxSize         Int           @default(6)
+  temperament     String        @default("semi-aggressive")
+  diet            String        @default("omnivore")
   compatability   String
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -40,16 +40,18 @@ model StoreSpecie {
   id       String   @id @default(cuid())
   baseSpecie     BaseSpecie? @relation(fields: [baseSpecieId], references: [id])
   baseSpecieId  String?
+  store         Store? @relation(fields: [storeId], references: [id])
+  storeId       String?
   region          Region   @default(OTHER)
   subgroup        Subgroup @default(OTHER)
   category        Category @default(OTHER)
-  commonName     String
-  scientificName String
-  description     String
-  maxSize        Int
-  temperament     String
-  diet            String
-  compatability   String
+  commonName     String? // @default("defaultCommonName")
+  scientificName String? // @default("defaultScientifName")
+  description     String? // @default("defaultDesc")
+  maxSize        Int? // @default(6)
+  temperament     String? // @default("defaultTemprament")
+  diet            String? // @default("defaultDiet")
+  compatability   String? // @default("defaultCompat")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   images          Image[]
@@ -60,6 +62,7 @@ model Store {
   id       String   @id @default(cuid())
   users       User[] 
   address    Address? // one-to-one referential
+  storeSpecies StoreSpecie[]
   storeName   String @unique
   storePath   String?
   description1  String?

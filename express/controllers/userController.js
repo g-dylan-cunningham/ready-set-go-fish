@@ -38,7 +38,8 @@ const loginUser = async (req, res) => {
         stores: { // handles store token if store present
           select: {
             id: true,
-            storeName: true
+            storeName: true,
+            storePath: true
           }
         }
       }
@@ -54,7 +55,7 @@ const loginUser = async (req, res) => {
     }
 
     let storeId = user.stores[0]?.id;
-    let storeName = user.stores[0]?.storeName
+    let { storeName, storePath } = user.stores[0]
     const token = createToken(user.id, storeId);
     console.log('storeId', user.stores[0], storeId)
     res.json({
@@ -64,6 +65,7 @@ const loginUser = async (req, res) => {
       token,
       store: {
         storeName,
+        storePath,
       },
     });
 

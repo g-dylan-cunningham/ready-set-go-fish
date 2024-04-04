@@ -18,13 +18,13 @@ router.get('/categoriesFromRegion/:region', async (req, res) => {
   try {
     const { region } = req.params;
     let list, map;
-    if (region === 'Malawi') {
+    if (region === 'MALAWI') {
       list = ['PEACOCK', 'HAP', 'MBUNA'];
       map = {PEACOCK: 'Peacock', HAP: 'Hap', MBUNA: 'Mbuna'};
-    } else if (region === 'Tanganyika') {
+    } else if (region === 'TANGANYIKA') {
       list = ['FEATHERFIN', 'FRONTOSA', 'JULIOCHROMIS', 'LAMPROLOGINES', 'TROPHEUS', 'MISC_TANGANYIKA'];
       map = {FEATHERFIN: 'Feather Fin', FRONTOSA: 'Frontosa', JULIOCHROMIS: 'Julidochromis', LAMPROLOGINES: 'Lamprologines', TROPHEUS: 'Tropheus', MISC_TANGANYIKA: 'Misc Tanganyikans'};
-    } else if (region === 'Victoria') {
+    } else if (region === 'VICTORIA') {
       list = ['Victorians'];
       map = {VICTORIAN_CICHLIDS: 'Victorians'};
     } else {

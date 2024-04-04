@@ -10,4 +10,12 @@ export const fields = [
     list: regionList,
     map: regionMap,
   },
+
+  // {
+  //   component: 'Select',
+  //   label: 'Category',
+  //   name: 'category',
+  //   list: regionList,
+  //   map: regionMap,
+  // },
 ];

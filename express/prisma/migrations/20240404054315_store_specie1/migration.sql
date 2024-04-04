@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "StoreSpecie" ALTER COLUMN "commonName" DROP NOT NULL,
+ALTER COLUMN "scientificName" DROP NOT NULL,
+ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "maxSize" DROP NOT NULL,
+ALTER COLUMN "temperament" DROP NOT NULL,
+ALTER COLUMN "diet" DROP NOT NULL,
+ALTER COLUMN "compatability" DROP NOT NULL;

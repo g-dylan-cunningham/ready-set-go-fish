@@ -1,7 +1,7 @@
 const enumArr = {
   sizeList: ["XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL", "VARIETY"],
   sexList: ["MALE", "FEMALE", "UNSEXED", "BREEDINGGROUP"],
-  regionList: ["Malawi", "Tanganyika", "Victoria", "New World", "Other"],
+  regionList: ["MALAWI", "VICTORIA", "TANGANYIKA", "NEW_WORLD", "OTHER"],
   categoryList: ["PEACOCK", "HAP", "TANGANYIKA", "OTHER"],
   countryList: [
     "UnitedStates",

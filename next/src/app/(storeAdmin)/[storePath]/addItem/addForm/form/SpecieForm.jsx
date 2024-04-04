@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useFormik } from "formik";
+import { getServerDomain, updateLocalStorageWithNewStore } from "@/app/utils";
 import { Field } from "@/app/components/forms";
 import validationSchema from "./validation";
-import { fields } from "./config";
+import { fields as defaultFields } from "./config";
 // import useStepContext from "../../contexts/useStepContext";
 
 const BasicForm = ({
@@ -19,21 +20,67 @@ const BasicForm = ({
     validationSchema,
   });
 
+  const [ fields, setFields ] = useState(defaultFields);
+// console.log('fields', fields)
   // useEffect(() => setIsPristine(true), [])
   // const [isPristine, setIsPristine] = useState(true)
 
-  const handleChange = (e) => {
-    // if (isPristine) {
-    //   setIsPristine(false);
-    //   dispatch({ type: "SET_DIRTY", payload: { id: 'basic' }})
-    // }
-    const { target } = e;
-    if (target.type === "checkbox") {
-      formik.setFieldValue(target.name, target.checked);
+  const handleGetNextField = async ({evt, name, value}) => {
+    evt.preventDefault();
+
+    try {
+      let url, lastIdx;
+      // debugger
+      if (name === 'region') {
+        url = getServerDomain() + `/baseSpecie/categoriesFromRegion/${value}`;
+        lastIdx = 0;
+      } else if (name = 'category') {
+        url = getServerDomain() + `/baseSpecie/speciesFromCategory/${value}`;
+        lastIdx = 1;
+      }
+      const oldFields = [ ...fields ];
+      oldFields.length = lastIdx + 1;
+      
+      const res = await fetch(url, {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+          next: { revalidate: 1 }, // REVIEW - needed to get latest data during development
+        },
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        if (error) {
+          console.log(error);
+          return;
+        }
+      }
+      // debugger
+      const newField = await res.json();
+      console.log('newFiled', newField)
+      setFields([ ...oldFields, ...newField ])
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleChange = (evt, next) => {
+    const { target  } = evt;
+    const { name, value, type } = target;
+    // debugger
+    if (name === 'region' || name === 'category') {
+      handleGetNextField({evt, name, value})
+    } 
+
+    if (type === "select") {
+      formik.setFieldValue(target.name, target.value);
     } else {
       formik.setFieldValue(target.name, target.value);
     }
   };
+
+  
 
   return (
     <form
@@ -52,7 +99,7 @@ const BasicForm = ({
       ))}
       <div className="mt-5 flex flex-row justify-end">
         <button type="submit" className="btn btn-primary btn-active">
-          CREATE
+          SELECT SPECIES
         </button>
       </div>
     </form>
