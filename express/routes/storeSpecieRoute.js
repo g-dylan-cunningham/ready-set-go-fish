@@ -36,6 +36,7 @@ router.post("/", async (req, res) => {
   } catch (e) {
     console.log("post store species", e);
     res.json({ error: e });
+    
   }
 });
 
