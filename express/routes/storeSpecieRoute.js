@@ -9,34 +9,114 @@ router.use(requireAuth);
 router.post("/", async (req, res) => {
   try {
     const { body, store } = req;
-    const { region, category, specie } = body;
+    const { region, category, specieId, commonName } = body;
     const { id: storeId } = store
-    console.log(storeId, region, category, specie)
+    console.log(storeId, region, category, specieId)
 
-    if (!specie || !storeId) {
-      throw Error("specie and store name are required");
+    if (!specieId || !storeId) {
+      throw Error("specieId and store name are required");
     }
 
+    const exists = await prisma.storeSpecie.findFirst({
+      where: {
+        baseSpecieId: specieId,
+      }
+    })
+
+    if (exists) {
+      return res.status(409).json({ message: 'Your store already has this species listed. You can not create a duplicate' });
+    }
+
+    const baseSpecie = await prisma.baseSpecie.findFirst({
+      where: {
+        id: specieId
+      },
+      // select: {
+      //   id: true,
+      //   password: true,
+      //   stores: { // handles store token if store present
+      //     select: {
+      //       id: true,
+      //       storeName: true,
+      //       storePath: true
+      //     }
+      //   }
+      // }
+    })
+console.log('baseSpecie', baseSpecie)
     const storeSpecies = await prisma.StoreSpecie.create({
       data: {
         baseSpecie: {
-          connect: { id: specie },
+          connect: { id: specieId },
         },
         store: {
           connect: { id: storeId}
         },
         region,
         category,
-        scientificName: specie,
-        commonName: specie,
+        scientificName: specieId,
+        commonName: commonName,
       },
     });
 
-    res.json(storeSpecies);
+    res.json({storeSpecies, baseSpecie});
   } catch (e) {
     console.log("post store species", e);
     res.json({ error: e });
-    
+
+  }
+});
+
+
+router.get("/myInventory", async (req, res) => {
+  try {
+    const { store } = req
+    const storeSpecies = await prisma.StoreSpecie.findMany({
+      where: {
+        storeId: store.id
+      }
+    });
+  
+    return res.json(storeSpecies);
+  } catch (e) {
+    return res.status(500).send({error: e, message: e.message})
+  }
+
+});
+
+router.get("/myInventory/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const storeSpecie = await prisma.StoreSpecie.findFirst({
+      where: {
+        id: id
+      }
+    });
+
+    const baseSpecie = await prisma.BaseSpecie.findFirst({
+      where: {
+        id: storeSpecie.baseSpecieId
+      }
+    });
+
+    // // if any values are null in obj1, override them w obj2 attrs
+    // function mergeObjs(obj1, obj2){
+    //   const merged = {}
+    //   keys1 = Object.keys(obj1);
+    //   keys1.forEach(k1 => {
+    //      merged[k1] = obj2[k1] || obj1[k1]; // replace values from 2nd object, if any
+    //   })
+    //   Object.keys(obj2).forEach(k2 => {
+    //      if (!keys1.includes(k2)) merged[k2] = obj2[k2]; // add additional properties from second object, if any
+    //   })
+    //   return merged
+    // }
+
+    // const combined = mergeObjs(storeSpecie, baseSpecie)
+
+    return res.json({storeSpecie, baseSpecie});
+  } catch (e) {
+    return res.status(500).send({error: e, message: e.message})
   }
 });
 

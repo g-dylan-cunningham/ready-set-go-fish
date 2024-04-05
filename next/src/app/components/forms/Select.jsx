@@ -18,15 +18,22 @@ const Select = ({ item, formik, handleChange }) => {
               ? "border border-red-400 focus:border-red-400"
               : ""
           }`}
-        onChange={e => handleChange(e, e.target.myvalue)}
+        onChange={(e) => handleChange(e, e.target.label)}
         // value={formik.values[name]}
       >
         <option value="default" disabled={disabled}>
           Select {name}
         </option>
-        {list.map((listItem) => (
-          <SelectItem key={listItem} myvalue={listItem} value={listItem} label={map[listItem]} />
-        ))}
+        {list.map((listItem) => {
+          const label = map[listItem];
+          return (
+            <SelectItem
+              key={listItem}
+              value={listItem + "_" + label} // workaround because having a hard time getting both data in onChange handler
+              label={label}
+            />
+          );
+        })}
       </select>
     </InputWrapper>
   );
@@ -34,10 +41,9 @@ const Select = ({ item, formik, handleChange }) => {
 
 export default Select;
 
-const SelectItem = ({ value, label = value, key }) => {
-  console.log('selectitem', value, label, key)
+const SelectItem = ({ value, label }) => {
   return (
-    <option key={key} value={value}>
+    <option value={value}>
       {label}
     </option>
   );

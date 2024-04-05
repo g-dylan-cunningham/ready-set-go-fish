@@ -8,7 +8,6 @@ import styles from "./styles.module.css";
 const Navbar = () => {
   const { logout } = useLogout();
   const { user, details, store } = useAuthContext();
-  console.log("store1", store);
   const [isAdminExpanded, setIsAdminExpanded] = useState(false);
   const toggle = () => {
     isAdminExpanded, setIsAdminExpanded(!isAdminExpanded);
@@ -89,7 +88,7 @@ const Navbar = () => {
                     {store?.storePath && ( // if store is configured, show myStore link
                       <li>
                         <Link
-                          href={`/${store?.storePath}/addItem`} // should go to add Item page if no items configured
+                          href={`/${store?.storePath}/inventory`} // should go to add Item page if no items configured
                           onClick={toggle}
                         >
                           {store?.storePath && "Manage Store"}

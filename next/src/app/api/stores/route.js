@@ -5,11 +5,10 @@ import { NextResponse } from 'next/server';
 
 
 export async function GET(request) {
-  // get single speciesy
-  console.log('he')
-  
+  // get all of a store's species (not admin)
   try {
     const storePath = request.nextUrl.searchParams.get(['storePath']);
+    console.log('path', storePath)
     const res = await fetch(`http://localhost:4000/storeRead/${storePath}`, {
       method: "GET",
       headers: {

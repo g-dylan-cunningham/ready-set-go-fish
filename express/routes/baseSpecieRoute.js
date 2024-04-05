@@ -74,7 +74,7 @@ router.get('/speciesFromCategory/:category', async (req, res) => {
     const speciesConfig = {
       component: 'Select',
       label: 'Species',
-      name: 'specie',
+      name: 'specieId',
       disabled: false,
       list,
       map,
@@ -82,6 +82,48 @@ router.get('/speciesFromCategory/:category', async (req, res) => {
     console.log('speciesConfig', speciesConfig)
     // disabled: false,
     res.json([speciesConfig]);
+  } catch (e) {
+    console.log('e)', e);
+    res.json({error: e})
+  }
+
+})
+
+router.get('/baseSpecieDetail/:specieId', async (req, res) => {
+  try {
+    const { specieId } = req.params;
+    const baseSpecie = await prisma.BaseSpecie.findUnique({
+      where: {
+        id: specieId
+      },
+
+      // select: {
+        //   id: true,
+        //   species: true,
+        //   scientificName: true,
+        //   commonName: true,
+        // }
+      })
+      console.log('baslSepcie', baseSpecie)
+
+    // let list = [];
+    // let map = {};
+    // for (let i = 0; i < baseSpecies.length; i++ ) {
+    //   list.push(baseSpecies[i].id);
+    //   map[baseSpecies[i].id] = baseSpecies[i].species
+    // }
+    // console.log('list Map', list, map)
+    // const speciesConfig = {
+    //   component: 'Select',
+    //   label: 'Species',
+    //   name: 'specieId',
+    //   disabled: false,
+    //   list,
+    //   map,
+    // };
+    // console.log('speciesConfig', speciesConfig)
+    // disabled: false,
+    res.json([baseSpecie]);
   } catch (e) {
     console.log('e)', e);
     res.json({error: e})

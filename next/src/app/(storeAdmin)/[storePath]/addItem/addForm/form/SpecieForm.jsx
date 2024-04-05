@@ -66,18 +66,20 @@ const BasicForm = ({
   };
 
   const handleChange = (evt, next) => {
+    
     const { target  } = evt;
     const { name, value, type } = target;
-    // debugger
-    if (name === 'region' || name === 'category') {
-      handleGetNextField({evt, name, value})
-    } 
+    const [fieldId, fieldLabel] = value.split('_'); 
 
-    if (type === "select") {
-      formik.setFieldValue(target.name, target.value);
-    } else {
-      formik.setFieldValue(target.name, target.value);
+    console.log('fieldLabel',fieldId, fieldLabel)
+    if (name === 'region' || name === 'category') {
+      handleGetNextField({evt, name, value: fieldId})
+    } else if (name === 'specieId') {
+      formik.setFieldValue('commonName', fieldLabel);
     }
+
+    formik.setFieldValue(target.name, fieldId);
+    
   };
 
   
