@@ -1,4 +1,5 @@
 import React from "react";
+import Link from 'next/link'
 
 async function getData({ storePath }) {
   // const res = await fetch('https://api.example.com/...')
@@ -50,7 +51,7 @@ const StorePage = async ({ params }) => {
   if (!store) {
     store = {}
   }
-  console.log("the data", store);
+
   return (
     <div className="container mx-auto">
       <h1 className="text-center">StorePage {storePath}</h1>
@@ -70,6 +71,7 @@ const StorePage = async ({ params }) => {
           <MailingAddress address={store.address} />
         </div>
       </div>
+      <Link href={`/${store.path}/inventory`} className="link link-primary">Inventory</Link>
     </div>
   );
 };

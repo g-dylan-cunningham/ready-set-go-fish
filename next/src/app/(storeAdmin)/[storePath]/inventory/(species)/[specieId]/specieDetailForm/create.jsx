@@ -2,13 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { getServerDomain, updateLocalStorageWithNewStore } from "@/app/utils";
+import { useRouter, useParams } from "next/navigation";
+import { getServerDomain } from "@/app/utils";
 import useAuthContext from "@/app/hooks/useAuthContext";
-import SpecieForm from "./form";
+import SpecieDetailForm from "./form";
 import Alert from "@/app/components/forms/Alert";
 
-const CreateStoreSpecie = ({}) => {
+const CreateStoreSpecieDetail = ({ specie }) => {
+  const params = useParams()
+  const { specieId } = params;
   const { dispatch, user, store, token } = useAuthContext();
   const [basicError, setBasicError] = useState("");
   // const router = useRouter();
@@ -24,10 +26,9 @@ const CreateStoreSpecie = ({}) => {
     mutationFn: async (body) => {
       console.log('body', body)
       try {
-        // debugger
-        const url = getServerDomain() + "/storeSpecie";
+        const url = getServerDomain() + `/storeSpecie/${specieId}`;
         const res = await fetch(url, {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -43,8 +44,9 @@ const CreateStoreSpecie = ({}) => {
           }
         }
 
-        const payload = await res.json();
-        return payload;
+        const specie = await res.json();
+        // router.push(`/${store.storePath}/inventory/${storeSpecie.id}`)
+        return specie;
       } catch (e) {
         console.log(e);
       }
@@ -63,13 +65,15 @@ const CreateStoreSpecie = ({}) => {
     <div>
       {" "}
       <Alert error={basicError} />
-      <SpecieForm
+      <SpecieDetailForm
         onSubmit={handleCreate}
         isLoading={isLoading}
         initialValues={{ region: "MALAWI" }}
+        setBasicError={setBasicError}
+        specie={specie}
       />
     </div>
   );
 };
 
-export default CreateStoreSpecie;
+export default CreateStoreSpecieDetail;

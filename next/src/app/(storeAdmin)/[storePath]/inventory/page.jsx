@@ -42,14 +42,11 @@ const StoreDetails = () => {
                 href={`/${store.storePath}/inventory/${specie.id}`}
                 value={specie.commonName}
               />
-              {/* <Link href={`/${store.storePath}/inventory/${specie.id}`}>
-
-              {specie.commonName}
-              </Link> */}
             </li>
           );
         })}
       </ul>
+      <Link href={`/${store.storePath}/inventory/addSpecie`} className="link link-primary">Add Species</Link>
     </Main>
   );
 };

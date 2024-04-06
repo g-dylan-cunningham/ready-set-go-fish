@@ -11,6 +11,7 @@ import { fields as defaultFields } from "./config";
 const BasicForm = ({
   onSubmit,
   initialValues,
+  setBasicError
 }) => {
   // const { dispatch } = useStepContext();
   const formik = useFormik({
@@ -66,7 +67,7 @@ const BasicForm = ({
   };
 
   const handleChange = (evt, next) => {
-    
+    setBasicError(""); // remove error msg
     const { target  } = evt;
     const { name, value, type } = target;
     const [fieldId, fieldLabel] = value.split('_'); 
@@ -77,9 +78,7 @@ const BasicForm = ({
     } else if (name === 'specieId') {
       formik.setFieldValue('commonName', fieldLabel);
     }
-
     formik.setFieldValue(target.name, fieldId);
-    
   };
 
   
