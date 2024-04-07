@@ -2,20 +2,21 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { useFormik } from "formik";
-import { getServerDomain, updateLocalStorageWithNewStore } from "@/app/utils";
 import { Field } from "@/app/components/forms";
+import usePageStateContext from '../../context/usePageStateContext';
 import validationSchema from "./validation";
-import { fields as defaultFields } from "./config";
-// import useStepContext from "../../contexts/useStepContext";
+import { fields } from "./config";
+import { EditIcon } from "@/app/components/icons"
 
 const SpecieDetailForm = ({
   onSubmit,
   specie,
-  // initialValues,
-  setBasicError
+  // isLoading,
 }) => {
-console.log('ss', specie)
-  // const { dispatch } = useStepContext();
+  const { sections, dispatch: dispatchPageState } = usePageStateContext();
+  const { isDisabled, isLoading } = sections?.description;
+
+  console.log('isLoading', sections)
   const formik = useFormik({
     enableReinitialize: true, // need this to take latest values
     initialValues: { description: specie?.description },
@@ -23,24 +24,18 @@ console.log('ss', specie)
     validationSchema,
   });
 
-  const [ fields, setFields ] = useState(defaultFields);
-
-
-  const [isPristine, setIsPristine] = useState(true)
-
   const handleChange = (e) => {
-    if (isPristine) {
-      setIsPristine(false);
-    }
     const { target } = e;
-    if (target.type === "checkbox") {
-      formik.setFieldValue(target.name, target.checked);
-    } else {
-      formik.setFieldValue(target.name, target.value);
-    }
+    // if (target.type === "checkbox") {
+    //   formik.setFieldValue(target.name, target.checked);
+    // } else {
+    formik.setFieldValue(target.name, target.value);
+    // }
   };
 
-  
+  const toggleDisabled = () => {
+    dispatchPageState({ type: 'UPDATE_SECTION_STATE', payload: { section: 'description', isDisabled: !isDisabled }})
+  }
 
   return (
     <form
@@ -55,11 +50,21 @@ console.log('ss', specie)
           }}
           formik={formik}
           handleChange={handleChange}
+          disabled={isDisabled}
         />
       ))}
-      <div className="mt-5 flex flex-row justify-end">
-        <button type="submit" className="btn btn-primary btn-active">
-          SELECT SPECIES
+      <div className={`mt-5 flex flex-row ${isDisabled ? 'justify-between' : 'justify-end'}`}>
+        {
+          isDisabled && (
+            <button onClick={toggleDisabled}>
+              <EditIcon />
+            </button>
+          )
+        }
+        <button type="submit" className="btn btn-primary btn-active" disabled={isDisabled}>
+          {
+            isLoading ? <span className="loading loading-spinner"></span> : "UPDATE SPECIE"
+          }
         </button>
       </div>
     </form>

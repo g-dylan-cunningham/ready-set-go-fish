@@ -4,7 +4,7 @@ const { regionMap, countryMap } = enumMap;
 
 export const fields = [
   {
-    component: 'Input',
+    component: 'TextArea',
     label: 'Description',
     name: 'description',
     // list: regionList,

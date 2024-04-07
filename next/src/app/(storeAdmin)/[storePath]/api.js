@@ -13,7 +13,6 @@ const getMyInventory = async ({ queryKey }) => {
 }
 
 const getSpecie = async ({ queryKey }) => {
-  console.log('querykey', queryKey)
   const url = getServerDomain() + `/storeSpecie/${queryKey[0]}/${queryKey[1]}`; // /myInventory
   const res = await fetch(url, {
     method: 'GET',

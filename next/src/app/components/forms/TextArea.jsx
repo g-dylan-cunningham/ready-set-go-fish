@@ -1,12 +1,13 @@
 import React from 'react';
 import InputWrapper from './InputWrapper';
 
-const TextArea = ({ item, formik, handleChange, children }) => {
+const TextArea = ({ item, formik, handleChange, disabled, children }) => {
   const { name, type, label, ...rest } = item;
   return (
     <InputWrapper label={label} formik={formik} name={name}>
       <textarea
         type={type}
+        disabled={disabled}
         value={formik.values[name]}
         // placeholder={placeholder}
         name={name}

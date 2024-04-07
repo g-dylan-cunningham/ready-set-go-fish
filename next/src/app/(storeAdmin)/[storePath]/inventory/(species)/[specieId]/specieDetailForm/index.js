@@ -1,3 +1,3 @@
-import Create from "./create";
+import SpecieDetailForm from "./SpecieDetailForm";
 
-export default Create;
+export default SpecieDetailForm;
