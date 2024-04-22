@@ -10,6 +10,7 @@ const skuRoute = require("./routes/skuRoute");
 const baseSpecieRoute = require("./routes/baseSpecieRoute");
 const storeSpecieRoute = require("./routes/storeSpecieRoute");
 const userRoute = require("./routes/userRoute")
+const imageRoute = require("./routes/imageRoute");
 
 app.use(express.json());
 app.use(cors());
@@ -31,6 +32,7 @@ app.use('/baseSpecie', baseSpecieRoute);
 app.use('/storeSpecie', storeSpecieRoute);
 app.use('/user', userRoute);
 app.use('/storeRead', unprotectedStoreRoute)
+app.use('/image', imageRoute);
 // app.use('/sku', skuRoute);
 
 // //test api

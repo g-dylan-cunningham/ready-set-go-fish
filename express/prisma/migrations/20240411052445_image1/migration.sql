@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Image" ALTER COLUMN "baseSpecieId" DROP NOT NULL,
+ALTER COLUMN "storeSpecieId" DROP NOT NULL,
+ALTER COLUMN "skuId" DROP NOT NULL;

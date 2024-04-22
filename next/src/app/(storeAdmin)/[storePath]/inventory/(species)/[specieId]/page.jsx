@@ -10,6 +10,7 @@ import { Main, ItemLink } from "@/app/components";
 import useAuthContext from "@/app/hooks/useAuthContext";
 import { getSpecie } from "../../../api";
 import SpecieDetailForm from "./specieDetailForm";
+import ImageUpload from "./imageUpload";
 
 const StoreDetails = ({ params }) => {
   const { specieId } = params;
@@ -29,7 +30,9 @@ const StoreDetails = ({ params }) => {
     return <div>comp loading</div>;
   }
   if (error) return "An error has occurred: " + error.message;
-
+  const handleClick = () => {
+    console.log('AWS_REGION', process.env.NEXT_PUBLIC_BASE_URL);
+  }
   const heading = "Your Store Specie Detail:";
 
   return (
@@ -38,7 +41,9 @@ const StoreDetails = ({ params }) => {
         <h1 className="text-2xl font-bold capitalize">{heading}</h1>
         {specie?.storeSpecie?.commonName} / {specie?.baseSpecie?.scientificName}
         <SpecieDetailForm specie={specie?.storeSpecie} />
+        <ImageUpload specie={specie?.storeSpecie}/>
       </Main>
+      <button onClick={handleClick}>clickme</button>
     </PageStateContextProvider>
   );
 };

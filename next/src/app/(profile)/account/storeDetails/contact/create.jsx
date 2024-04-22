@@ -19,7 +19,6 @@ const CreateContact = ({ traverse, children }) => {
     data,
   } = useMutation({
     mutationFn: async (body) => {
-      // debugger
       try {
         const url = getServerDomain() + "/store";
         const res = await fetch(url, {

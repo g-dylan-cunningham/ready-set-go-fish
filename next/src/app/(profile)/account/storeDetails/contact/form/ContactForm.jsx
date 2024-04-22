@@ -35,12 +35,31 @@ const ContactForm = ({
 
   const handleChange = (e) => {
     const { target } = e;
+    const { name, value, type } = target;
+    const [fieldId, fieldLabel] = value.split('_'); 
     if (target.type === "checkbox") {
       formik.setFieldValue(target.name, target.checked);
+    } else if (name === 'state') {
+      formik.setFieldValue(name, fieldLabel)
     } else {
       formik.setFieldValue(target.name, target.value);
     }
   };
+
+  // const handleChange = (evt, next) => {
+  //   setBasicError(""); // remove error msg
+  //   const { target  } = evt;
+  //   const { name, value, type } = target;
+  //   const [fieldId, fieldLabel] = value.split('_'); 
+
+  //   console.log('fieldLabel',fieldId, fieldLabel)
+  //   if (name === 'region' || name === 'category') {
+  //     handleGetNextField({evt, name, value: fieldId})
+  //   } else if (name === 'specieId') {
+  //     formik.setFieldValue('commonName', fieldLabel);
+  //   }
+  //   formik.setFieldValue(target.name, fieldId);
+  // };
 
   const heading = "Contact Details";
   if (isLoading) return <Skeleton heading={heading} />;

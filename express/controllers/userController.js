@@ -54,8 +54,16 @@ const loginUser = async (req, res) => {
       throw Error("Incorrect user credentials"); // make more generic?
     }
 
-    let storeId = user.stores[0]?.id;
-    let { storeName, storePath } = user.stores[0]
+
+    const storeId = user.stores[0]?.id;
+    const store = {};
+    if (storeId) {
+      let { storeName, storePath } = user.stores[0];
+      store = {
+        storeName,
+        storePath,
+      };
+    }
     const token = createToken(user.id, storeId);
     console.log('storeId', user.stores[0], storeId)
     res.json({
@@ -63,10 +71,7 @@ const loginUser = async (req, res) => {
         email, 
       },
       token,
-      store: {
-        storeName,
-        storePath,
-      },
+      store,
     });
 
 

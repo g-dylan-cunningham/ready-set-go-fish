@@ -1,4 +1,4 @@
-import Modal from './Modal'
+import Modal from '../Modal'
 import Main from '../Main'
 import Footer from './Footer'
 import NavBar from './NavBar'

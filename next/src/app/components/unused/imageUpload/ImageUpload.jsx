@@ -9,8 +9,9 @@ const ImageUpload = ({
   specie,
   associatedImgs,
   setAssociatedImgs,
-  setShowModal,
+  // setShowModal,
 }) => {
+
   const [file, setFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [fileLink, setFileLink] = useState(null);

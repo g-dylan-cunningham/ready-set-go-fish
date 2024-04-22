@@ -99,12 +99,12 @@ model Sku {
 
 model Image {
   id            String   @id @default(cuid())
-  baseSpecie         BaseSpecie @relation(fields: [baseSpecieId], references: [id], onDelete: Cascade)
-  baseSpecieId      String
-  storeSpecie        StoreSpecie @relation(fields: [storeSpecieId], references: [id], onDelete: Cascade)
-  storeSpecieId     String
-  sku                 Sku @relation(fields: [skuId], references: [id], onDelete: Cascade)
-  skuId              String
+  baseSpecie         BaseSpecie? @relation(fields: [baseSpecieId], references: [id], onDelete: Cascade)
+  baseSpecieId      String?
+  storeSpecie        StoreSpecie? @relation(fields: [storeSpecieId], references: [id], onDelete: Cascade)
+  storeSpecieId     String?
+  sku                 Sku? @relation(fields: [skuId], references: [id], onDelete: Cascade)
+  skuId              String?
   isPrimary          Boolean  @default(false)
   isSecondary        Boolean  @default(false)
   isThumbnail        Boolean  @default(false)

@@ -14,9 +14,9 @@ export default yup.object().shape({
     .max(50)
     .required("City is required"),
   state: yup
-    .string()
-    .max(2)
-    .min(2),
+    .string(),
+    // .max(2)
+    // .min(2),
   postal: yup
     .string()
     .max(5)

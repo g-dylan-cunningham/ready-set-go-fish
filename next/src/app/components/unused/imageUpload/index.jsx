@@ -1,3 +1,3 @@
-import Images from './Images';
+import ImageUpload from './ImageUpload';
 
-export default Images;
+export default ImageUpload;

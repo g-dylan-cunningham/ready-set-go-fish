@@ -21,4 +21,21 @@ router.delete('/all', async (req, res) => {
   }
 })
 
+router.get('/myImages/:imageId', async (request, res) => {
+  console.log('hit the route')
+  try {
+    const { imageId } = request.params
+  console.log('imageId', imageId)
+    const images = await prisma.Image.findMany({
+      where: {
+        AND: [{ id: imageId }, { isThumbnail: true }],
+      },
+    });
+    res.json(images);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send({})
+  }
+})
+
 module.exports = router;
