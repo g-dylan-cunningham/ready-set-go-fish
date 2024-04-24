@@ -59,20 +59,22 @@ const ImageSide = ({ specie, isEditable,
         next: { revalidate: 1 }, // REVIEW - needed to get latest data during development
       },
     });
-    return await res.json();
+    const existingImages = await res.json();
+    setAssociatedImgs(existingImages);
+    return existingImages;
   }
 
   const {
-    data,
+    data: existingImages,
     isLoading,
     refetch,
     error,
   } = useQuery({
-    queryKey: ["myImages", specie.id, token],
+    queryKey: ["store", specie.id, token], // REVIEW do we need token?
     queryFn: getImages,
     enabled: !!token,
   });
-  if (isLoading || !data) {
+  if (isLoading || !existingImages) {
     return <div>comp loading</div>;
   }
 
@@ -80,22 +82,6 @@ const ImageSide = ({ specie, isEditable,
   const handleClick = () => {
     console.log('AWS_REGION', process.env.NEXT_PUBLIC_BASE_URL);
   }
-
-  // useEffect(() => {
-  //   setImgsLoading(true);
-  //   fetch(
-  //     '/api/images?' +
-  //       new URLSearchParams({
-  //         specie_id: specie.specie_id,
-  //       })
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setAssociatedImgs(data);
-  //       setImgsLoading(false);
-  //     })
-  //     .catch((e) => console.log(e));
-  // }, [specie.specie_id]);
 
   const handleDeleteImg = async (e, img) => {
     e.preventDefault();
@@ -174,7 +160,8 @@ const ImageSide = ({ specie, isEditable,
                       objectFit: 'cover',
                       verticalAlign: 'bottom',
                     }}
-                    src={img.thumbnail_url}
+                    src={img.thumbnailUrl}
+                    alt=''
                     height={100}
                     width={100}
                   />

@@ -3,18 +3,19 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Resizer from "react-image-file-resizer";
 import Image from "next/image";
+import { getServerDomain } from '@/app/utils';
 import { Button } from "@/app/components/forms";
 import styles from "./styles.module.css";
 
 const ImageUpload = ({
   // specie,
-  associatedImgs = [],
-  setAssociatedImgs = () => {},
-  setShowModal = () => {console.log('do not need if not in modal')},
+  associatedImgs,
+  setAssociatedImgs,
+  setShowModal,
 }) => {
 
   const params = useParams()
-  const { specieId } = params;
+  const { specieId, storePath } = params;
   const [file, setFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [fileLink, setFileLink] = useState(null);
@@ -30,13 +31,19 @@ const ImageUpload = ({
     let matchingFullImageKey = ""; // process full image before thumbnail and save to key to the thumbnail image model. This is useful for deleting.
 
     const uploadImageToAws = async (file, isThumbnail = false) => {
+
       const getImageUrls = ({ isThumbnail }) => {
-        const s3Domain = "https://cichlid-cartel.s3.us-west-1.amazonaws.com/";
-        const namespaceSegment = process.env.NEXT_PUBLIC_S3_FOLDER;
-        const speciesSegment = `${specieId}/`;
-        const typeSegment = isThumbnail ? "thumbnail/" : "full/";
-        const path =
-          namespaceSegment + speciesSegment + typeSegment + file.name;
+        const s3Domain = "https://ready-set-go-fish.s3.us-west-1.amazonaws.com/";
+        // const s3Domain = "https://cichlid-cartel.s3.us-west-1.amazonaws.com/";
+        
+        const pathArr = [
+          `${storePath}`, // unique folder for store images
+          `${specieId}`, // unique folder for each species
+          isThumbnail ? "thumbnail" : "full",  // file thumbnails together and full images together
+          file.name
+        ]
+        const path = pathArr.join('/');
+
 
         return {
           path,
@@ -73,14 +80,16 @@ const ImageUpload = ({
           });
 
           if (uploadResponse.ok) {
-            let is_primary, is_secondary;
+            let isPrimary = false;
+            let isSecondary = false;
 
             if (associatedImgs?.length === 0) {
-              is_primary = true;
+              isPrimary = true;
             } else if (associatedImgs?.length === 1) {
-              is_secondary = true;
+              isSecondary = true;
             }
-            const prismaResp = await fetch("/api/images", {
+
+            const prismaRes = await fetch(getServerDomain() + "/image/store/specie", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -88,36 +97,42 @@ const ImageUpload = ({
               body: JSON.stringify({
                 // filename: file.name,
                 contentType: file.type,
-                id: specieId,
+                storeSpecieId: specieId,
                 // fields,
                 url,
                 isPrimary,
                 isSecondary,
                 isThumbnail,
-                thumbnail_url: getImageUrls({ isThumbnail: true }).url,
+                key: getImageUrls({ isThumbnail }).path,
+                thumbnailUrl: getImageUrls({ isThumbnail: true }).url,
                 fullImageUrl: getImageUrls({ isThumbnail: false }).url,
                 fullImageKey: matchingFullImageKey,
               }),
             });
 
-            const newImagePrisma = await prismaResp.json();
-            if (!isThumbnail) {
-              matchingFullImageKey = newImagePrisma.id;
+            if (prismaRes.ok) {
+              const newImagePrisma = await prismaRes.json();
+              if (!isThumbnail) {
+                matchingFullImageKey = newImagePrisma.id;
+              }
+  
+              setFileLink(null);
+              setFile(null);
+              if (isThumbnail) {
+                const newAssociatedImages = [
+                  ...associatedImgs,
+                  { ...newImagePrisma },
+                ];
+                setAssociatedImgs(newAssociatedImages);
+                setShowModal(false);
+              }
+  
+              e.target.reset();
+              return;
+            } else {
+              console.error('prisma response for image api is not ok')
             }
-
-            setFileLink(null);
-            setFile(null);
-            if (isThumbnail) {
-              const newAssociatedImages = [
-                ...associatedImgs,
-                { ...newImagePrisma },
-              ];
-              setAssociatedImgs(newAssociatedImages);
-              setShowModal(false);
-            }
-
-            e.target.reset();
-            return;
+            
           } else {
             console.error("S3 Upload Error:", uploadResponse);
             alert("Upload failed.");

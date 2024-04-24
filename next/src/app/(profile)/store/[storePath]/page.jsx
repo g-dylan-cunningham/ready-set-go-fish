@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 async function getData({ storePath }) {
   // const res = await fetch('https://api.example.com/...')
-  debugger
+
   try {
     const res = await fetch(
       `http://localhost:3000/api/stores?storePath=${storePath}`,
@@ -71,7 +71,7 @@ const StorePage = async ({ params }) => {
           <MailingAddress address={store.address} />
         </div>
       </div>
-      <Link href={`/${store.path}/inventory`} className="link link-primary">Inventory</Link>
+      <Link href={`/${storePath}/inventory`} className="link link-primary">Inventory</Link>
     </div>
   );
 };
